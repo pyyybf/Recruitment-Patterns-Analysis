@@ -25,8 +25,10 @@ for q_dir in os.listdir("./data_original"):
             cik = row["cik"]
             adsh = row["adsh"]
             accession = row["adsh"].replace("-", "")
+            # Url of filing detail page
             url = f"http://www.sec.gov/Archives/edgar/data/{cik}/{accession}/{adsh}-index.html"
 
+            # Fetch index html page to parse the url of html document
             response = requests.get(url, headers=headers, timeout=20)
             if response.status_code != 200:
                 with open("./error_log.txt", "a") as fp:
@@ -36,9 +38,11 @@ for q_dir in os.listdir("./data_original"):
                     fp.write(f"=======================================================\n")
                 continue
 
-            element = etree.HTML(response.content)
+            element = etree.HTML(response.content)  # Root of html
+            # Get <tr> list of the table `Document Format Files`
             tr_list = element.xpath("/html/body/div[4]/div[3]/div/table[position()=1]/tr")
 
+            # Parse table headers to get index of file type and name
             th_list = tr_list[0].xpath(".//th")
             type_idx = -1
             doc_idx = -1
@@ -48,6 +52,7 @@ for q_dir in os.listdir("./data_original"):
                 elif th.text == "Document":
                     doc_idx = i
 
+            # Find the row with a Type of `10-K`, and get its document name
             doc_name = None
             for tr in tr_list[1:]:
                 td_list = tr.xpath(".//td")
@@ -55,8 +60,11 @@ for q_dir in os.listdir("./data_original"):
                     doc_name = td_list[doc_idx].xpath(".//a")[0].text
                     break
 
+            # Url of the real document html
             url_doc = f"http://www.sec.gov/Archives/edgar/data/{cik}/{accession}/{doc_name}"
             print(f"{count}/{len(df_sub_10k)}: {url_doc}")
+
+            # Fetch real document html content
             response = requests.get(url_doc, headers=headers, timeout=20)
             if response.status_code != 200:
                 with open("./error_log.txt", "a") as fp:
@@ -66,7 +74,7 @@ for q_dir in os.listdir("./data_original"):
                     fp.write(f"=======================================================\n")
                 continue
 
-            # Write into final data as html
+            # Write into final data file as html
             with open(f"./data_html/{int(row['fy'])}/{cik}_{accession}_{doc_name}", "w", encoding="utf-8") as fp:
                 fp.write(response.text)
 
