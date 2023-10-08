@@ -1,6 +1,8 @@
 ### macOS template
 # General
 .DS_Store
+**/.DS_Store
+.DS_Store?
 .AppleDouble
 .LSOverride
 
@@ -166,3 +168,4 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
+.idea
