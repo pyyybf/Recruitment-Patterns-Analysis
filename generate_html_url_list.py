@@ -1,5 +1,8 @@
 import os
 
+if not os.path.exists(f"./html_url"):
+    os.makedirs(f"./html_url")
+
 for year in os.listdir("./data_html"):
     if year == ".DS_Store":
         continue

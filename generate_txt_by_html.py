@@ -1,6 +1,9 @@
 import os
 import re
 
+if not os.path.exists(f"./data_txt"):
+    os.makedirs(f"./data_txt")
+
 for year in os.listdir("./data_html"):
     if year == ".DS_Store":
         continue
