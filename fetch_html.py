@@ -7,6 +7,9 @@ headers = {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36",
 }
 
+if not os.path.exists(f"./data_html"):
+    os.makedirs(f"./data_html")
+
 for q_dir in os.listdir("./data_original"):
     if q_dir == ".DS_Store":
         continue
