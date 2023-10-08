@@ -16,7 +16,7 @@ for q_dir in os.listdir("./data_original"):
     df_sub = pd.read_csv(f"./data_original/{q_dir}/sub.txt", sep="\t")
     # Filter 10-K from 2016 to 2023
     df_sub_10k = df_sub.loc[(df_sub["form"] == "10-K") & (df_sub["fy"] > 2015) & (df_sub["fy"] < 2023)]
-    print(f"========== {q_dir}: Total {len(df_sub_10k)}")
+    print(f"========== {q_dir}: Total {len(df_sub_10k)} ==========")
 
     count = 0
     for index, row in df_sub_10k.iterrows():
@@ -29,7 +29,11 @@ for q_dir in os.listdir("./data_original"):
 
             response = requests.get(url, headers=headers, timeout=20)
             if response.status_code != 200:
-                print(f"Fetch index: Status Code {response.status_code}")
+                with open("./error_log.txt", "a") as fp:
+                    fp.write(f"Error in {q_dir}, document of year {int(row['fy'])}.\n")
+                    fp.write(f"http://www.sec.gov/Archives/edgar/data/{cik}/{accession}/{adsh}-index.html\n")
+                    fp.write(f"Fetch index: Status Code {response.status_code}\n")
+                    fp.write(f"=======================================================\n")
                 continue
 
             element = etree.HTML(response.content)
@@ -55,7 +59,11 @@ for q_dir in os.listdir("./data_original"):
             print(f"{count}/{len(df_sub_10k)}: {url_doc}")
             response = requests.get(url_doc, headers=headers, timeout=20)
             if response.status_code != 200:
-                print(f"Fetch document: Status Code {response.status_code}")
+                with open("./error_log.txt", "a") as fp:
+                    fp.write(f"Error in {q_dir}, document of year {int(row['fy'])}.\n")
+                    fp.write(f"http://www.sec.gov/Archives/edgar/data/{cik}/{accession}/{doc_name}\n")
+                    fp.write(f"Fetch document: Status Code {response.status_code}\n")
+                    fp.write(f"=======================================================\n")
                 continue
 
             # Write into final data as html
@@ -64,6 +72,7 @@ for q_dir in os.listdir("./data_original"):
 
         except Exception as e:
             with open("./error_log.txt", "a") as fp:
-                fp.write(f"{e}\n")
                 fp.write(f"Error in {q_dir}, document of year {int(row['fy'])}.\n")
                 fp.write(f"http://www.sec.gov/Archives/edgar/data/{row['cik']}/{row['adsh'].replace('-', '')}/\n")
+                fp.write(f"{e}\n")
+                fp.write(f"=======================================================\n")
