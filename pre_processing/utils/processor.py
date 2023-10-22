@@ -1,5 +1,7 @@
 import dask.bag as db
 import os
+import re
+from bs4 import BeautifulSoup
 
 # 这是一个判断是否为空行的函数，可以直接使用来过滤空行。
 def is_not_empty(line):
@@ -10,7 +12,13 @@ def preprocess_line(line):
     # 添加实际的预处理代码, 因为数据量较大, 所以使用dask.bag将数据一行一行进行处理，最后返回一个bag
     processed_line = line.strip()  # 去除前后空白
     # 还可以添加其他的预处理操作
-    ...
+    
+    # 去除html标签，将html实体转换为对应的字符
+    processed_line = BeautifulSoup(processed_line, "html.parser").get_text()
+    # 去除非字母数字字符
+    processed_line = re.sub(r'[^a-zA-Z0-9\s]', '', processed_line)
+    # 去除非单词的字母组合
+    processed_line = re.sub(r'\b[a-zA-Z]{1,2}\b', '', processed_line)
     
     return processed_line
 
