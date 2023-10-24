@@ -19,7 +19,7 @@ def preprocess_line(line, current_paragraph):
     processed_line = processed_line.strip()
     
     if processed_line:
-        if processed_line[0].islower():
+        if processed_line[0].islower() or processed_line[0].isdigit():
             current_paragraph += ' ' + processed_line
         else:
             if current_paragraph:
