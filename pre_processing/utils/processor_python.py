@@ -2,6 +2,7 @@ import os
 import re
 from bs4 import BeautifulSoup
 from utils.helpers import is_not_empty
+from utils.helpers import have_more_than_3_words
 
 def preprocess_line(line, current_paragraph):
     # 去除前后空白
@@ -32,11 +33,11 @@ def process_file(filepath):
     with open(filepath, 'r', encoding='utf-8') as f:
         for line in f:
             current_paragraph, paragraph = preprocess_line(line, current_paragraph)
-            if paragraph is not None:
+            if paragraph is not None and have_more_than_3_words(paragraph):
                 paragraphs.append(paragraph)
     
     # 处理文件最后的段落
-    if is_not_empty(current_paragraph):
+    if is_not_empty(current_paragraph)and have_more_than_3_words(current_paragraph):
         paragraphs.append(current_paragraph)
         
     return paragraphs
