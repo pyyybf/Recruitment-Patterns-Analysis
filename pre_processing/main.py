@@ -1,17 +1,38 @@
-from utils import processor
+from utils import processor_python
+from utils import processor_dask
+from const import paths
+from utils.helpers import write_to_file
+import os
 
 def main():
-    # 测试的路径，可以改成自己的路径，这里是我本地的路径
-    test_filepath = "/Users/weichentao/Documents/USC/2023fall/540/project/data_txt/2016/1750_000104746916014299_a2228768z10-k.htm.txt"
+    root_path = paths.year_path
+    target_root = paths.target_path
+    os.makedirs(target_root, exist_ok=True)
     
-    processed_bag = processor.process_file(test_filepath)
+    for root, dirs, files in os.walk(root_path):
+        for file in files:
+            if file.endswith('.txt'):
+                filepath = os.path.join(root, file)
+                paragraphs = processor_python.process_file(filepath)
+                target_filepath = os.path.join(target_root, 'processed_' + file)
+                write_to_file(target_filepath, paragraphs)
+
+    #processed_list = processor_python.process_file(test_filepath)
     
-    processed_list = processed_bag.compute()
+
+# def main():
+#     # 文件路径
+#     filepath = "/Users/weichentao/Documents/USC/2023fall/540/project/data_txt/2016"
     
-    for i, line in enumerate(processed_list):
-        if i >= 100:
-            break
-        print(line)
+#     processed_bag = processor_dask.process_file(filepath)
+    
+#     # 计算处理后的总行数
+#     res = processed_bag.compute()
+#     for i, line in enumerate(res):
+#         if i >= 1000:
+#             break
+#         print(line)
 
 if __name__ == '__main__':
+    main()
     main()

@@ -15,10 +15,14 @@ def preprocess_line(line):
     
     # 去除html标签，将html实体转换为对应的字符
     processed_line = BeautifulSoup(processed_line, "html.parser").get_text()
+    
     # 去除非字母数字字符
     processed_line = re.sub(r'[^a-zA-Z0-9\s]', '', processed_line)
     # 去除非单词的字母组合
     processed_line = re.sub(r'\b[a-zA-Z]{1,2}\b', '', processed_line)
+    
+    processed_line = re.sub(r'\s+', ' ', processed_line)
+    processed_line = processed_line.strip()
     
     return processed_line
 
