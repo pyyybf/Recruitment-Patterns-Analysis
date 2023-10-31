@@ -12,6 +12,8 @@ def incidence_matrix_generator(data, column_name):
     Returns:
         pd.DataFrame: Incidence matrix
     """
+    data[column_name] = data[column_name].fillna('')
+    
     token_pattern = r'\b[a-zA-Z]+\b'
     
     vectorizer = CountVectorizer(binary=True, token_pattern=token_pattern)

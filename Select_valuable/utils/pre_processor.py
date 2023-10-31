@@ -16,7 +16,7 @@ from nltk import pos_tag
 # nltk.download('averaged_perceptron_tagger')
 # nltk.download('punkt')
 
-from const.stopwords import STOPWORDS
+# from const.stopwords import STOPWORDS
 
 def processor_use_stem(texts, stopwords):
     result = []
@@ -173,5 +173,5 @@ def processor_use_lemma_plus(texts, stopwords):
     return result
 
 
-test = ['Indicate check mark whether the registra1nt 1 has filed all reports required filed Section 13 15d the Securities Exchange Act 1934 during the preceding 12 months for such shorter period that the registrant was required file such reports and 2 has been subject such filing requirements for the past 90 days']
-print(processor_use_lemma_plus(test,STOPWORDS))
+# test = ['Indicate check mark whether the registra1nt 1 has filed all reports required filed Section 13 15d the Securities Exchange Act 1934 during the preceding 12 months for such shorter period that the registrant was required file such reports and 2 has been subject such filing requirements for the past 90 days']
+# print(processor_use_lemma_plus(test,STOPWORDS))
