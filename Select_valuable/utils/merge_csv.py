@@ -20,6 +20,7 @@ def merge_csv(folder_path):
             
             # 检查并删除空行
             df = df.dropna(how='all')
+            # df = df.dropna()
             
             # 将清理过的 DataFrame 添加到列表中
             df_list.append(df)

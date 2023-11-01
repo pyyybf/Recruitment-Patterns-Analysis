@@ -1,7 +1,7 @@
 from sklearn.svm import SVC
 from sklearn.model_selection import GridSearchCV
 
-def train_svm(X, y):
+def train_SVM(X, y):
     # 定义模型
     svc = SVC()
     
