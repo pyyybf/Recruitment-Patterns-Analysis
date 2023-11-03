@@ -1,7 +1,10 @@
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
+import joblib
+from utils.const import paths
+import os
 
-def incidence_matrix_generator(data, column_name):
+def incidence_matrix_generator(data, column_name, vectorizer = None):
     """
     This function generates an incidence matrix for NLP data.
     
@@ -16,13 +19,20 @@ def incidence_matrix_generator(data, column_name):
     
     token_pattern = r'\b[a-zA-Z]+\b'
     
-    vectorizer = CountVectorizer(binary=True, token_pattern=token_pattern)
-    X = vectorizer.fit_transform(data[column_name])
+    if not vectorizer:
+        vectorizer = CountVectorizer(binary=True, token_pattern=token_pattern)
     
-    incidence_matrix = pd.DataFrame(X.toarray(), columns=vectorizer.get_feature_names_out())
+        incidence_matrix_vectorizer = vectorizer.fit(data[column_name])
+        joblib.dump(incidence_matrix_vectorizer, os.path.join(paths.saved_models, 'incidence_matrix_vectorizer.joblib'))
+    else:
+        incidence_matrix_vectorizer = vectorizer
+    
+    X = incidence_matrix_vectorizer.transform(data[column_name])
+    
+    incidence_matrix = pd.DataFrame(X.toarray(), columns=incidence_matrix_vectorizer.get_feature_names_out())
     return incidence_matrix
 
-def tf_idf_generator(data, column_name):
+def tf_idf_generator(data, column_name, vectorizer = None):
     """
     This function takes in a dataframe and a column name, 
     and returns a dataframe with the TF-IDF values for each word in the column.
@@ -40,13 +50,20 @@ def tf_idf_generator(data, column_name):
     
     # Create the TF-IDF vectorizer object
     # The token pattern here ensures that words are made of letters (both uppercase and lowercase) only
-    tfidf = TfidfVectorizer(token_pattern=r'\b[a-zA-Z]+\b')
     
-    # Fit the TF-IDF vectorizer and transform the data
-    tfidf_vectors = tfidf.fit_transform(data[column_name])
+    if not vectorizer:
+        vectorizer = TfidfVectorizer(token_pattern=r'\b[a-zA-Z]+\b')
+    
+        # Fit the TF-IDF vectorizer and transform the data
+        tfidf_vectorizer = vectorizer.fit(data[column_name])
+        joblib.dump(tfidf_vectorizer, os.path.join(paths.saved_models, 'tfidf_vectorizer.joblib'))
+    else:
+        tfidf_vectorizer = vectorizer
+    
+    tfidf_vectors = tfidf_vectorizer.transform(data[column_name])
     
     # Create a dataframe with the TF-IDF vectors
-    tfidf_df = pd.DataFrame(tfidf_vectors.toarray(), columns=tfidf.get_feature_names_out(), index=data.index)
+    tfidf_df = pd.DataFrame(tfidf_vectors.toarray(), columns=tfidf_vectorizer.get_feature_names_out(), index=data.index)
     
     # Return the dataframe
     return tfidf_df

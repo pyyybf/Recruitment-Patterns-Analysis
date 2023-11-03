@@ -29,7 +29,7 @@ def train_model(model_name, data):
         raise ValueError(f"Invalid model name: {model_name}. Available models: {list(model_trainers.keys())}")
     
     X = data.iloc[:, :-1]
-    y = data.iloc[:, -1].replace({'yes': 1, 'no': 0})
+    y = data.iloc[:, -1].replace({'Yes': 1, 'No': 0})
 
     # 调用相应的训练函数
     model = model_trainers[model_name](X, y)
