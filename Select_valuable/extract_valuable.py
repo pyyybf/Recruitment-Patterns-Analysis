@@ -14,7 +14,7 @@ def data_cleaning(total_folder, year_folder, output_folder_path,vectorizer, mode
     
     for txt_file in glob.glob(os.path.join(input_folder_path, year_folder,'*.txt')):
         dealed_file_num += 1
-        print(f"Process finished: {dealed_file_num}/{file_num}")
+        print(f"{year_folder} process finished: {dealed_file_num}/{file_num}")
         
         with open(txt_file, 'r', encoding='utf-8') as file:
             lines = file.readlines()
@@ -44,7 +44,7 @@ def data_cleaning(total_folder, year_folder, output_folder_path,vectorizer, mode
         
 
 if __name__ == '__main__':
-    model_path = os.path.join(paths.saved_models, f"RandomForest.joblib")
+    model_path = os.path.join(paths.saved_models, f"DecisionTree.joblib")
     vectorizer_path_tfidf = os.path.join(paths.saved_models, 'tfidf_vectorizer.joblib')
     
     input_folder_path = paths.original_data
@@ -53,8 +53,12 @@ if __name__ == '__main__':
     model = joblib.load(model_path)
     vectorizer = joblib.load(vectorizer_path_tfidf)
     
-    for foldername, subfolders, filenames in os.walk(input_folder_path):
-        print("Currently dealing with folder: " + foldername)
-        data_cleaning(total_folder=input_folder_path, year_folder=foldername, output_folder_path= output_folder_path,vectorizer=vectorizer, model = model)
+    for year_folder in os.listdir(input_folder_path):
+        full_path = os.path.join(input_folder_path, year_folder)
+        if os.path.isdir(full_path):
+            data_cleaning(total_folder=input_folder_path, year_folder=year_folder, output_folder_path=output_folder_path, vectorizer=vectorizer, model=model)
+    # for foldername, subfolders, filenames in os.walk(input_folder_path):
+    #     print("Currently dealing with folder: " + foldername)
+    #     data_cleaning(total_folder=input_folder_path, year_folder=foldername, output_folder_path= output_folder_path,vectorizer=vectorizer, model = model)
     
     print("Done!")
