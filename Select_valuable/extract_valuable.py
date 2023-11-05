@@ -6,6 +6,8 @@ import os
 import glob
 import tqdm
 from utils.helper import count_files_in_directory
+from utils.pre_processor import processor_use_lemma_plus as processor
+from utils.const.stopwords import STOPWORDS
 
 def data_cleaning(total_folder, year_folder, output_folder_path,vectorizer, model):
     
@@ -19,7 +21,9 @@ def data_cleaning(total_folder, year_folder, output_folder_path,vectorizer, mode
         with open(txt_file, 'r', encoding='utf-8') as file:
             lines = file.readlines()
             
-        X = vectorizer.transform(lines)
+        clean_lines = processor(lines, STOPWORDS)
+            
+        X = vectorizer.transform(clean_lines)
         
         predictions = model.predict(X)
         
