@@ -13,8 +13,8 @@ def retrieve_top_n_idx(doc_inc_mat, query_inc_mat, top_n=5):
 
     # Get index list of top-n positive value
     positive_idx_list = np.where(max_sims > 0)[0]
-    sorted_positive_idx_list = np.argsort(max_sims[positive_idx_list])[::-1]
-    doc_idx_list = positive_idx_list[sorted_positive_idx_list][:top_n]
+    sorted_positive_idx_list = np.argsort(max_sims[positive_idx_list])
+    doc_idx_list = positive_idx_list[sorted_positive_idx_list][:-top_n - 1:-1]
 
     return doc_idx_list
 
