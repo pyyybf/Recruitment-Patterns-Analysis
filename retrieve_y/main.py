@@ -1,9 +1,8 @@
 import csv
 import os
-import re
 from tqdm import tqdm
 
-from utils import fs
+from utils import fs, pre_processor
 from utils.retrieval_tool import Lines2Matrix, retrieve_top_n_idx
 
 base_dir = "data_sample"
@@ -31,15 +30,8 @@ def retrieve_y():
             for file_name in file_names:
                 with open(f"./{base_dir}/{year}/{file_name}", "r") as fp:
                     lines = [line.strip() for line in fp.readlines() if len(line.strip()) > 0]
-                # 姑且试试按英语句号split一下吧
-                split_lines = []
-                for line in lines:
-                    sentences = re.sub(r"&.{4};", " ", line)
-                    sentences = sentences.split(". ")
-                    for sentence in sentences:
-                        if len(sentence.strip()) > 0:
-                            split_lines.append(sentence.strip())
-                lines = split_lines
+
+                lines = pre_processor.split_paragraph(lines)
 
                 cur_inc_mat = transformer.transform(lines)
                 idxs = retrieve_top_n_idx(doc_inc_mat, cur_inc_mat, top_n=3)
