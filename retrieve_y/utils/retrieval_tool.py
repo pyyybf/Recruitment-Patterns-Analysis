@@ -25,10 +25,10 @@ class Lines2Matrix:
     Parameters
     ----------
     stop_words : {'english'}, list, default=None
-    stemmer : {'Lancaster', 'Porter', 'Snowball'}, default='Lancaster'
+    stemmer : {'Lancaster', 'Porter', 'Snowball'}, default=None
     """
 
-    def __init__(self, *, stop_words=None, stemmer="Lancaster"):
+    def __init__(self, *, stop_words=None, stemmer=None):
         self.vocabulary = set()
         if type(stop_words) == list:
             self.stop_words = set(stop_words)
@@ -36,12 +36,14 @@ class Lines2Matrix:
             self.stop_words = set(stopwords.words("english"))
         else:
             self.stop_words = set()
-        if stemmer == "Porter":
+        if stemmer == "Lancaster":
+            self.stemmer = LancasterStemmer()
+        elif stemmer == "Porter":
             self.stemmer = PorterStemmer()
         elif stemmer == "Snowball":
             self.stemmer = SnowballStemmer("english")
         else:
-            self.stemmer = LancasterStemmer()
+            self.stemmer = None
 
     def preprocess_lines(self, lines):
         processed_lines = []
@@ -53,9 +55,12 @@ class Lines2Matrix:
             processed_line = re.sub(r"\s+", " ", processed_line)
             processed_line = processed_line.strip()
 
-            # 取一下词根
+            # 分词
             processed_line = word_tokenize(processed_line)
-            processed_line = [self.stemmer.stem(word) for word in processed_line if word not in self.stop_words]
+
+            # 取一下词根
+            if self.stemmer is not None:
+                processed_line = [self.stemmer.stem(word) for word in processed_line if word not in self.stop_words]
 
             # TODO: 限制下词频 感觉财年之类的词频率太高了
 
