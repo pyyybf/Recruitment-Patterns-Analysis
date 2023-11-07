@@ -2,7 +2,8 @@ import csv
 import os
 from tqdm import tqdm
 
-from utils import fs, pre_processor
+from utils import fs
+from utils.pre_processor import split_paragraph
 from utils.retrieval_tool import Lines2Matrix, retrieve_top_n_idx
 
 base_dir = "data_sample"
@@ -31,7 +32,7 @@ def retrieve_y():
                 with open(f"./{base_dir}/{year}/{file_name}", "r") as fp:
                     lines = [line.strip() for line in fp.readlines() if len(line.strip()) > 0]
 
-                lines = pre_processor.split_paragraph(lines)
+                lines = split_paragraph(lines)
 
                 cur_inc_mat = transformer.transform(lines)
                 idxs = retrieve_top_n_idx(doc_inc_mat, cur_inc_mat, top_n=3)
