@@ -6,10 +6,8 @@ from utils import fs
 from utils.pre_processor import split_paragraph
 from utils.retrieval_tool import Lines2Matrix, retrieve_top_n_idx
 
-base_dir = "data_sample"
 
-
-def retrieve_y():
+def retrieve_y(base_dir="data_txt"):
     # TODO: 目前先分成两部分试试 应该得有个test？？时间太长的话就混在一起吧。。
     # 先读下数据文件
     data_file_name = "recruit_number.csv"
