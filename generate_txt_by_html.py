@@ -19,7 +19,7 @@ for year in os.listdir("./data_html"):
             continue
         with open(f"./data_html/{year}/{html_file}", "r") as source:
             html_text = source.read()
-            text = re.sub(r"<[^>]+>", "", html_text)
+            text = re.sub(r"<[^>]+>", "\n", html_text)
             text = re.sub(r"\n{3,}", "\n\n", text)
 
         with open(f"./data_txt/{year}/{html_file}.txt", "w") as target:
