@@ -56,6 +56,9 @@ class Lines2Matrix:
             # 取一下词根
             processed_line = word_tokenize(processed_line)
             processed_line = [self.stemmer.stem(word) for word in processed_line if word not in self.stop_words]
+
+            # TODO: 限制下词频 感觉财年之类的词频率太高了
+
             processed_lines.append(processed_line)
         return processed_lines
 
