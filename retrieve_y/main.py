@@ -3,8 +3,7 @@ import os
 from tqdm import tqdm
 
 from utils import fs
-from utils.pre_processor import split_paragraph
-from utils.retrieval_tool import Lines2Matrix, retrieve_top_n_idx
+from utils.retrieval_tool import Lines2Matrix, retrieve_top_n_idx, split_paragraph
 
 
 def retrieve_y(base_dir="data_txt"):
@@ -14,8 +13,12 @@ def retrieve_y(base_dir="data_txt"):
     with open(f"./recruit_text/{data_file_name}", "r") as fp:
         lines = [row[0] for row in csv.reader(fp) if len(row) > 0 and len(row[0].strip()) > 0]
 
+    # 读取必须词
+    with open("required_words.txt", "r") as fp:
+        required_words = fp.read().strip().split()
+
     # TODO: 要用word2vec吗 感觉没啥必要 先试试效果吧 不行再换好了
-    transformer = Lines2Matrix(stop_words="english", stemmer="Lancaster")
+    transformer = Lines2Matrix(stop_words="english", stemmer="Lancaster", required_words=required_words)
     doc_inc_mat = transformer.fit_transform(lines)
 
     # TODO: 好 开始遍历文件夹了
