@@ -6,7 +6,7 @@ from utils import fs
 from utils.retrieval_tool import Lines2Matrix, retrieve_top_n_idx, split_paragraph
 
 
-def retrieve_y(base_dir="data_txt"):
+def retrieve_y(base_dir="data_txt", top_n=5):
     # TODO: 目前先分成两部分试试 应该得有个test？？时间太长的话就混在一起吧。。
     # 先读下数据文件
     data_file_name = "recruit_number.csv"
@@ -36,7 +36,7 @@ def retrieve_y(base_dir="data_txt"):
                 lines = split_paragraph(lines)
 
                 cur_inc_mat = transformer.transform(lines)
-                idxs = retrieve_top_n_idx(doc_inc_mat, cur_inc_mat, top_n=3)
+                idxs = retrieve_top_n_idx(doc_inc_mat, cur_inc_mat, top_n=top_n)
 
                 with open(f"./retrieve_results/{year}/retrieved_{file_name}", "w") as fp:
                     for idx in idxs:
