@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 from utils.const import paths
 from utils.pre_processor import processor_use_lemma_plus as processor
+from utils.const.stopwords import STOPWORDS
 
 
 def clean_txt(read_path, output_path, Stopwords=None) -> None:
@@ -34,10 +35,12 @@ def clean_txt(read_path, output_path, Stopwords=None) -> None:
                     output_file_path = os.path.join(
                         output_year_folder, filename)
                     with open(output_file_path, 'w', encoding='utf-8') as output_file:
-                        output_file.write(cleaned_content)
+                        for line in cleaned_content:
+                            output_file.write(line + '\n')
+                    print(f"Cleaned data saved to {output_file_path}")
 
 
 if __name__ == '__main__':
     read_path = paths.valuable_data_original  # 输入文件夹路径
     output_path = paths.valuable_data_cleaned  # 输出文件夹路径
-    clean_txt(read_path, output_path)
+    clean_txt(read_path, output_path, STOPWORDS)

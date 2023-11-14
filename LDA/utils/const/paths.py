@@ -6,5 +6,5 @@
 # valuable_data = '/Users/weichentao/Documents/USC/2023fall/540/project/select_valuable/valuable' # 里面放提取出的信息
 
 # valuable_data_2021 = "/Users/weichentao/Documents/USC/2023fall/540/project/select_valuable/valuable/2021-2022/2021"
-valuable_data_original = "/Users/weichentao/Documents/USC/2023fall/540/project/select_valuable/valuable/total"
-valuable_data_cleaned = ""
+valuable_data_original = "/Users/weichentao/Documents/USC/2023fall/540/project/select_valuable/valuable/Valuable"
+valuable_data_cleaned = "/Users/weichentao/Documents/USC/2023fall/540/project/select_valuable/valuable/cleaned"
