@@ -18,25 +18,24 @@ from nltk import pos_tag
 
 # from const.stopwords import STOPWORDS
 
-
 def processor_use_stem(texts, stopwords):
     result = []
-
+    
     # 创建一个Porter词干提取器
     stemmer = PorterStemmer()
-
+    
     # 初始化词形还原器
     # lemmatizer = WordNetLemmatizer()
-
+    
     # 定义英文字符和空白字符的正则表达式模式
     english_chars_and_whitespace_pattern = re.compile(r'[^a-zA-Z\s]')
-
+    
     # 定义英文单词的正则表达式模式
     english_word_pattern = re.compile(r'^[a-zA-Z-]+$')
-
+    
     # 创建一个转换表，将所有标点符号映射为None
     translator = str.maketrans('', '', string.punctuation)
-
+    
     for text in texts:
         cleaned_words = []
         for word in text.split():
@@ -46,45 +45,44 @@ def processor_use_stem(texts, stopwords):
             word = word.translate(translator)
             # 删除非英文字符
             word = english_chars_and_whitespace_pattern.sub('', word)
-
+            
             if not word:
                 continue
-
+            
             # 提取词干
             word = stemmer.stem(word)
-
+        
             # 进行词形还原
             # word = lemmatizer.lemmatize(word).strip()
-
+            
             # 检查是否是英文单词，且不在停用词列表中
             # if english_word_pattern.search(word) and word not in stopwords:
             #     cleaned_words.append(word)
-
+            
             if word and word not in stopwords:
                 cleaned_words.append(word)
-
+            
         # 转换为字符串
         cleaned_text = ' '.join(cleaned_words)
         result.append(cleaned_text)
-
+    
     return result
-
 
 def processor_use_lemma(texts, stopwords):
     result = []
-
+    
     # 创建一个Porter词干提取器
     # stemmer = PorterStemmer()
-
+    
     # 初始化词形还原器
     lemmatizer = WordNetLemmatizer()
-
+    
     # 定义英文字符和空白字符的正则表达式模式
     english_chars_and_whitespace_pattern = re.compile(r'[^a-zA-Z\s]')
-
+    
     # 创建一个转换表，将所有标点符号映射为None
     translator = str.maketrans('', '', string.punctuation)
-
+    
     for text in texts:
         cleaned_words = []
         for word in text.split():
@@ -94,29 +92,28 @@ def processor_use_lemma(texts, stopwords):
             word = word.translate(translator)
             # 删除非英文字符
             word = english_chars_and_whitespace_pattern.sub('', word)
-
+            
             if not word:
                 continue
-
+            
             # 提取词干
             # word = stemmer.stem(word)
-
+        
             # 进行词形还原
             word = lemmatizer.lemmatize(word).strip()
-
+            
             # 检查是否是英文单词，且不在停用词列表中
             # if english_word_pattern.search(word) and word not in stopwords:
             #     cleaned_words.append(word)
-
+            
             if word and word not in stopwords:
                 cleaned_words.append(word)
-
+            
         # 转换为字符串
         cleaned_text = ' '.join(cleaned_words)
         result.append(cleaned_text)
-
+    
     return result
-
 
 def get_wordnet_pos(treebank_tag):
     if treebank_tag.startswith('J'):
@@ -134,13 +131,13 @@ def get_wordnet_pos(treebank_tag):
 def line_processor_use_lemma_plus(text, stopwords):
     # 初始化词形还原器
     lemmatizer = WordNetLemmatizer()
-
+    
     # 定义英文字符和空白字符的正则表达式模式
     english_chars_and_whitespace_pattern = re.compile(r'[^a-zA-Z\s]')
-
+    
     # 创建一个转换表，将所有标点符号映射为None
     translator = str.maketrans('', '', string.punctuation)
-
+    
     cleaned_words = []
     # 先对文本进行分句
     sentences = sent_tokenize(text)
@@ -156,20 +153,20 @@ def line_processor_use_lemma_plus(text, stopwords):
             word = word.translate(translator)
             # 删除非英文字符
             word = english_chars_and_whitespace_pattern.sub('', word)
-
+            
             if not word or word in stopwords:
                 continue
-
+            
             # 获取单词的词性
             word_pos = get_wordnet_pos(pos)
             # 进行词形还原
             lemmatized_word = lemmatizer.lemmatize(word, pos=word_pos).strip()
             cleaned_words.append(lemmatized_word)
-
+            
     # 转换为字符串
     cleaned_text = ' '.join(cleaned_words)
     return cleaned_text
-
+    
 
 def processor_use_lemma_plus(texts, stopwords):
     result = []
