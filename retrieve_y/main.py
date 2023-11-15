@@ -51,4 +51,4 @@ def retrieve_y(base_dir="data_txt", top_n=5):
 
 
 if __name__ == "__main__":
-    retrieve_y()
+    retrieve_y(top_n=10)
