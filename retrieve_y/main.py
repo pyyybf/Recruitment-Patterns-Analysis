@@ -7,7 +7,7 @@ from utils.retrieval_tool import Lines2Matrix, retrieve_top_n_idx, split_paragra
 
 
 def retrieve_y(base_dir="data_txt", top_n=5):
-    # TODO: 目前先分成两部分试试 应该得有个test？？时间太长的话就混在一起吧。。
+    # TODO: 目前先分成两部分试试
     # 先读下数据文件
     data_file_name = "recruit_number.csv"
     with open(f"./recruit_text/{data_file_name}", "r") as fp:
@@ -17,14 +17,13 @@ def retrieve_y(base_dir="data_txt", top_n=5):
     with open("required_words.txt", "r") as fp:
         required_words = fp.read().strip().split()
 
-    # TODO: 要用word2vec吗 感觉没啥必要 先试试效果吧 不行再换好了
     transformer = Lines2Matrix(stop_words="english",
                                stemmer="Lancaster",
                                required_words=required_words,
                                keywords={"full-time", "part-time"})
     doc_inc_mat = transformer.fit_transform(lines)
 
-    # TODO: 好 开始遍历文件夹了
+    # 开始遍历文件夹
     fs.clear_dir("./retrieve_results")
     for year in range(2016, 2023):
         os.mkdir(f"./retrieve_results/{year}")
