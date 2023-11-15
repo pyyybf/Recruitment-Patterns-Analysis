@@ -13,14 +13,17 @@ def retrieve_y(base_dir="data_txt", top_n=5):
     with open(f"./recruit_text/{data_file_name}", "r") as fp:
         lines = [row[0] for row in csv.reader(fp) if len(row) > 0 and len(row[0].strip()) > 0]
 
-    # 读取必须词
+    # 读取必须词 必须包含列表词之一否则0分
     with open("required_words.txt", "r") as fp:
         required_words = fp.read().strip().split()
+    # 读取关键词 包含就分很高
+    with open("keywords.txt", "r") as fp:
+        keywords = fp.read().strip().split()
 
     transformer = Lines2Matrix(stop_words="english",
                                stemmer="Lancaster",
                                required_words=required_words,
-                               keywords={"full-time", "part-time"})
+                               keywords=keywords)
     doc_inc_mat = transformer.fit_transform(lines)
 
     # 开始遍历文件夹
