@@ -91,10 +91,19 @@ def parse_vocabulary(processed_lines):
     return vocab
 
 
-def lines2matrix(processed_lines, vocabulary):
+def lines2matrix(processed_lines, vocabulary, keywords, min_len=5):
     incidence_mat = []
     for line in processed_lines:
-        incidence_mat.append([1 if word in line else 0 for word in vocabulary])
+        if len(line) < min_len:
+            incidence_mat.append([0] * len(vocabulary))
+            continue
+        inc = 1 / (len(line) + 1)
+        for keyword in keywords:
+            if keyword in line:
+                incidence_mat.append([inc] * len(vocabulary))
+                break
+        else:
+            incidence_mat.append([inc if word in line else 0 for word in vocabulary])
     incidence_mat = np.array(incidence_mat)
     return incidence_mat
 
@@ -109,7 +118,12 @@ class Lines2Matrix:
     required_words : list, default=None
     """
 
-    def __init__(self, *, stop_words=None, stemmer=None, required_words=None):
+    def __init__(self, *,
+                 stop_words=None,
+                 stemmer=None,
+                 required_words=None,
+                 keywords=None,
+                 min_len=5):
         self.vocabulary = set()
         if type(stop_words) == list:
             self.stop_words = set(stop_words)
@@ -126,6 +140,8 @@ class Lines2Matrix:
         else:
             self.stemmer = None
         self.required_words = set(required_words or [])
+        self.keywords = set(keywords or [])
+        self.min_len = min_len
 
     def fit(self, lines):
         processed_lines = preprocess_lines(lines)
@@ -138,10 +154,10 @@ class Lines2Matrix:
         # Get vocabulary from processed lines
         self.vocabulary = parse_vocabulary(processed_lines)
         # Generate the incidence matrix
-        incidence_mat = lines2matrix(processed_lines, self.vocabulary)
+        incidence_mat = lines2matrix(processed_lines, self.vocabulary, self.keywords, self.min_len)
         return incidence_mat
 
     def transform(self, lines):
         processed_lines = preprocess_lines(lines, self.stemmer, self.stop_words, self.required_words)
-        incidence_mat = lines2matrix(processed_lines, self.vocabulary)
+        incidence_mat = lines2matrix(processed_lines, self.vocabulary, self.keywords, self.min_len)
         return incidence_mat

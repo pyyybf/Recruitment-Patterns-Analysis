@@ -18,7 +18,10 @@ def retrieve_y(base_dir="data_txt", top_n=5):
         required_words = fp.read().strip().split()
 
     # TODO: 要用word2vec吗 感觉没啥必要 先试试效果吧 不行再换好了
-    transformer = Lines2Matrix(stop_words="english", stemmer="Lancaster", required_words=required_words)
+    transformer = Lines2Matrix(stop_words="english",
+                               stemmer="Lancaster",
+                               required_words=required_words,
+                               keywords={"full-time", "part-time"})
     doc_inc_mat = transformer.fit_transform(lines)
 
     # TODO: 好 开始遍历文件夹了
