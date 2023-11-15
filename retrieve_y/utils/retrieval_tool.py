@@ -11,7 +11,7 @@ def split_paragraph(lines):
     split_lines = []
     # 姑且试试按英语句号split一下吧
     for line in lines:
-        sentences = re.sub(r"&.{4};", " ", line)
+        sentences = re.sub(r"&.{0,5};", " ", line)
         sentences = sentences.split(". ")
         for sentence in sentences:
             if len(sentence.strip()) > 0:
@@ -50,10 +50,11 @@ def retrieve_top_n_idx(doc_inc_mat, query_inc_mat, top_n=5):
 def preprocess_lines(lines, stemmer=None, stop_words=None, required_words=None):
     processed_lines = []
     for line in lines:
-        processed_line = line.strip()
+        processed_line = line.lower().strip()
 
         # 先去除所有除非字母字符
-        processed_line = re.sub(r"[^a-zA-Z\s]+", " ", processed_line)
+        processed_line = re.sub(r"&.{0,5};", " ", processed_line)
+        processed_line = re.sub(r"[^a-zA-Z-\s]+", " ", processed_line)
         processed_line = re.sub(r"\s+", " ", processed_line)
         processed_line = processed_line.strip()
 
@@ -75,8 +76,6 @@ def preprocess_lines(lines, stemmer=None, stop_words=None, required_words=None):
             processed_line = [stemmer.stem(word) for word in processed_line]
         elif stop_words:
             processed_line = [word for word in processed_line if word not in stop_words]
-
-        # TODO: 限制下词频？感觉财年之类的词频率太高了
 
         processed_lines.append(processed_line)
     return processed_lines
