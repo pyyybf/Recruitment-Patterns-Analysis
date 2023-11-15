@@ -19,6 +19,22 @@ def split_paragraph(lines):
     return split_lines
 
 
+def merge_paragraph(lines):
+    processed_lines = []
+    cur_paragraph = ""
+    for line in lines:
+        line = line.strip()
+        if len(line) == 0:
+            continue
+        if line[0].isupper() and len(cur_paragraph) > 0:
+            processed_lines.append(cur_paragraph.strip())
+            cur_paragraph = ""
+        cur_paragraph += line
+        cur_paragraph += " "
+    processed_lines.append(cur_paragraph.strip())
+    return processed_lines
+
+
 def retrieve_top_n_idx(doc_inc_mat, query_inc_mat, top_n=5):
     cs = np.dot(query_inc_mat, doc_inc_mat.T)
     max_sims = np.max(cs, axis=1)

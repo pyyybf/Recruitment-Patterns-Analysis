@@ -3,7 +3,7 @@ import os
 from tqdm import tqdm
 
 from utils import fs
-from utils.retrieval_tool import Lines2Matrix, retrieve_top_n_idx, split_paragraph
+from utils.retrieval_tool import Lines2Matrix, retrieve_top_n_idx, split_paragraph, merge_paragraph
 
 
 def retrieve_y(base_dir="data_txt", top_n=5):
@@ -33,6 +33,9 @@ def retrieve_y(base_dir="data_txt", top_n=5):
                 with open(f"./{base_dir}/{year}/{file_name}", "r") as fp:
                     lines = [line.strip() for line in fp.readlines() if len(line.strip()) > 0]
 
+                # 先把莫名分段拼回去
+                lines = merge_paragraph(lines)
+                # 再分个句 不行就去掉 泪目
                 lines = split_paragraph(lines)
 
                 cur_inc_mat = transformer.transform(lines)
