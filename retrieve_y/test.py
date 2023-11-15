@@ -3,7 +3,7 @@ import random
 import shutil
 
 from utils import fs
-from main import retrieve_y
+from main import retrieve_recruit_info
 
 
 def get_samples(n_per_year):
@@ -21,4 +21,4 @@ def get_samples(n_per_year):
 
 if __name__ == "__main__":
     get_samples(10)
-    retrieve_y("./data_sample")
+    retrieve_recruit_info("./data_sample")

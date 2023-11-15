@@ -6,7 +6,7 @@ from utils import fs
 from utils.retrieval_tool import Lines2Matrix, retrieve_top_n_idx, split_paragraph, merge_paragraph
 
 
-def retrieve_y(base_dir="data_txt", top_n=5):
+def retrieve_recruit_info(base_dir="data_txt", top_n=5):
     # TODO: 目前先分成两部分试试
     # 先读下数据文件
     data_file_name = "recruit_number.csv"
@@ -53,4 +53,4 @@ def retrieve_y(base_dir="data_txt", top_n=5):
 
 
 if __name__ == "__main__":
-    retrieve_y(top_n=10)
+    retrieve_recruit_info(top_n=10)
