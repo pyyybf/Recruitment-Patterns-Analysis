@@ -43,23 +43,30 @@ def useful_line(line, ban_words):
     return "employ" in line
 
 
+def match_line(line, ban_words):
+    if not useful_line(line, ban_words):
+        return -1, "Useless Line"
+    res = re.findall(pattern, line)
+    if len(res) > 0:
+        employee_num = res[0][2].strip().replace(",", "")
+        employee_num = re.sub(r"\s+", "", employee_num)
+        employee_num = convert_number(employee_num)
+        if employee_num >= 0:
+            return employee_num, f"{employee_num} <= {line}"
+    return -1, "No Match Pattern"
+
+
 def match_employee_num(lines, ban_words={}):
     employee_nums = []
     employee_infos = []
     for line in lines:
-        if not useful_line(line, ban_words):
-            continue
-        res = re.findall(pattern, line)
-        if len(res) > 0:
-            employee_num = res[0][2].strip().replace(",", "")
-            employee_num = re.sub(r"\s+", "", employee_num)
-            employee_num = convert_number(employee_num)
-            if employee_num >= 0:
-                employee_nums.append(employee_num)
-                employee_infos.append(f"{employee_num} <= {line}")
+        employee_num, employee_info = match_line(line, ban_words)
+        if employee_num >= 0:
+            employee_nums.append(employee_num)
+            employee_infos.append(f"{employee_num} <= {line}")
     # TODO: 判断数据对不对，感觉不能用最大值。。跟年份一样的感觉也不行
     if len(employee_nums) > 0:
-        with open("./ress.txt", "a") as fp:
+        with open("./employee_lines.txt", "a") as fp:
             fp.write("\n".join(employee_infos))
             fp.write("\n\n")
         return max(employee_nums)
