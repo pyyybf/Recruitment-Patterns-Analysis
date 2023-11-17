@@ -5,6 +5,6 @@
 # original_data = '/Users/weichentao/Documents/USC/2023fall/540/project/data_txt' # 里面放还未提取信息的数据，注意是年份文件夹的父文件夹
 # valuable_data = '/Users/weichentao/Documents/USC/2023fall/540/project/select_valuable/valuable' # 里面放提取出的信息
 
-# valuable_data_2021 = "/Users/weichentao/Documents/USC/2023fall/540/project/select_valuable/valuable/2021-2022/2021"
-valuable_data_original = "/Users/weichentao/Documents/USC/2023fall/540/project/select_valuable/valuable/Valuable"
-valuable_data_cleaned = "/Users/weichentao/Documents/USC/2023fall/540/project/select_valuable/valuable/cleaned"
+valuable_data_2017 = "/Users/weichentao/Documents/USC/2023fall/540/project/select_valuable/valuable/cleaned/2017"
+all_data = ""
+lda_model_save_path = ""
