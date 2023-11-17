@@ -41,8 +41,8 @@ def get_employee(csv_file, output_file):
         json_file.write(json_data)
 
 
-
-csv_file = "C:/Alycia/USC/2023Fall/ISE540/Project/retrieve_y_result/test_csv/result.csv"
-output_file = "C:/Alycia/USC/2023Fall/ISE540/Project/retrieve_y_result/test_csv/results.json"
-get_employee(csv_file, output_file)
-print("All done!")
+if __name__ == "__main__":
+    csv_file = "C:/Alycia/USC/2023Fall/ISE540/Project/retrieve_y_result/test_csv/result.csv"
+    output_file = "C:/Alycia/USC/2023Fall/ISE540/Project/retrieve_y_result/test_csv/results.json"
+    get_employee(csv_file, output_file)
+    print("All done!")
