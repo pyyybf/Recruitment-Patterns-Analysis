@@ -1,11 +1,8 @@
 import os
 import random
 import shutil
-from retrieve_y.utils.retrieval_tool import preprocess_lines
 from utils import fs
-from main import retrieve_recruit_info, retrieve_file_recruit_info, generate_transformer_doc_inc
-from nltk.stem.lancaster import LancasterStemmer
-from nltk.corpus import stopwords
+from main import retrieve_recruit_info
 
 
 def get_samples(n_per_year):
@@ -24,13 +21,3 @@ def get_samples(n_per_year):
 if __name__ == "__main__":
     # get_samples(10)
     retrieve_recruit_info("./data_sample")
-    # retrieve_file_recruit_info()
-    # fs.clear_dir("./retrieve_results_tmp")
-    # transformer, doc_inc_mat = generate_transformer_doc_inc()
-    # retrieve_file_recruit_info("4969_000000496917000006_d12312016.htm.txt", transformer, doc_inc_mat, top_n=5,
-    #                            source_dir="./data_txt/2016",
-    #                            target_dir="./retrieve_results_tmp")
-    # print(preprocess_lines(["As of both December 31, 2016 and 2015, Credco had 6 employees."],
-    #                        stemmer=LancasterStemmer(),
-    #                        stop_words=set(stopwords.words("english")),
-    #                        required_words={"employee", "employees", "employed", "headcount"}))
