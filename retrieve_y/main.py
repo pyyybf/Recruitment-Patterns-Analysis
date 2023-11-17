@@ -18,10 +18,10 @@ def retrieve_recruit_info(base_dir="data_txt", top_n=5):
         lines = [row[0] for row in csv.reader(fp) if len(row) > 0 and len(row[0].strip()) > 0]
 
     # 读取必须词 必须包含列表词之一否则0分
-    with open("required_words.txt", "r") as fp:
+    with open("./my_words/required_words.txt", "r") as fp:
         required_words = fp.read().strip().split()
     # 读取关键词 包含就分很高
-    with open("keywords.txt", "r") as fp:
+    with open("./my_words/keywords.txt", "r") as fp:
         keywords = fp.read().strip().split()
 
     transformer = Lines2Matrix(stop_words="english",
