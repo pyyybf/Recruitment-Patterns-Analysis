@@ -10,7 +10,7 @@ def get_employee(csv_file, output_file):
     with open(csv_file, 'r', encoding='utf-8') as file:
         csv_reader = csv.DictReader(file)
         for row in csv_reader:
-            cik_number = int(row['file_name'].split('_')[1])  # Extracting CIK number from file name
+            cik_number = int(row['file_name'].split('_')[0])  # Extracting CIK number from file name
             year = row['year']
             employee_num = int(row['employee_num'])
             file_name = row['file_name']
