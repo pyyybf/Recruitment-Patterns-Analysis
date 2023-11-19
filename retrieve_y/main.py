@@ -75,7 +75,7 @@ def match_recruit_info(base_dir="data_txt", target_file="./number_match.csv"):
                 # 再分个句 不行就去掉 泪目
                 lines = split_paragraph(lines)
 
-                employee_num = match_employee_num(lines, ban_words)
+                employee_num = match_employee_num(lines, year, ban_words)
 
                 if employee_num >= 0:
                     with open(target_file, "a") as fp:

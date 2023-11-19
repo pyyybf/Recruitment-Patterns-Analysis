@@ -56,15 +56,15 @@ def match_line(line, ban_words):
     return -1, "No Match Pattern"
 
 
-def match_employee_num(lines, ban_words={}):
+def match_employee_num(lines, year, ban_words={}):
     employee_nums = []
     employee_infos = []
     for line in lines:
         employee_num, employee_info = match_line(line, ban_words)
-        if employee_num >= 0:
+        if employee_num >= 0 and employee_num != year:
             employee_nums.append(employee_num)
             employee_infos.append(f"{employee_num} <= {line}")
-    # TODO: 判断数据对不对，感觉不能用最大值。。跟年份一样的感觉也不行
+
     if len(employee_nums) > 0:
         with open("./employee_lines.txt", "a") as fp:
             fp.write("\n".join(employee_infos))
