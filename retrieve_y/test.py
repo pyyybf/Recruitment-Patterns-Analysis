@@ -1,8 +1,10 @@
 import os
 import random
 import shutil
+
+from utils.get_employee import get_employee
 from utils import fs
-from main import retrieve_recruit_info
+from main import retrieve_recruit_info, match_recruit_info
 
 
 def get_samples(n_per_year):
@@ -20,4 +22,8 @@ def get_samples(n_per_year):
 
 if __name__ == "__main__":
     # get_samples(10)
-    retrieve_recruit_info("./data_sample")
+    # retrieve_recruit_info("./data_sample")
+    match_recruit_info(base_dir="./unmatch_txt",
+                       target_file="./test_number_match.csv",
+                       record_file="./test_employee_lines.txt")
+    get_employee(csv_file="./test_number_match.csv", output_file="./test_employee_num.json")
