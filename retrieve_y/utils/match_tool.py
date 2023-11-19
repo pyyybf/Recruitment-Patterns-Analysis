@@ -47,22 +47,22 @@ def useful_line(line, ban_words):
 
 def match_line(line, ban_words):
     if not useful_line(line, ban_words):
-        return -1, "Useless Line"
+        return -1
     res = re.findall(pattern, line)
     if len(res) > 0:
         employee_num = res[0][2].strip().replace(",", "")
         employee_num = re.sub(r"\s+", "", employee_num)
         employee_num = convert_number(employee_num)
         if employee_num >= 0:
-            return employee_num, f"{employee_num} <= {line}"
-    return -1, "No Match Pattern"
+            return employee_num
+    return -1
 
 
 def match_employee_num(lines, year, ban_words={}):
     employee_nums = []
     employee_infos = []
     for line in lines:
-        employee_num, employee_info = match_line(line, ban_words)
+        employee_num = match_line(line, ban_words)
         if employee_num >= 0 and employee_num != year:
             employee_nums.append(employee_num)
             employee_infos.append(f"{employee_num} <= {line}")
