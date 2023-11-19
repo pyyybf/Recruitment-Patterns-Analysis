@@ -37,10 +37,12 @@ def convert_number(num_str):
 
 
 def useful_line(line, ban_words):
+    if "employ" not in line:
+        return False
     for word in ban_words:
-        if word in line:
+        if len(re.findall(fr"\b{word}\b", line)) > 0:
             return False
-    return "employ" in line
+    return True
 
 
 def match_line(line, ban_words):
