@@ -58,7 +58,7 @@ def match_line(line, ban_words):
     return -1
 
 
-def match_employee_num(lines, year, ban_words={}):
+def match_employee_num(lines, year, record_file, ban_words={}):
     employee_nums = []
     employee_infos = []
     for line in lines:
@@ -68,7 +68,7 @@ def match_employee_num(lines, year, ban_words={}):
             employee_infos.append(f"{employee_num} <= {line}")
 
     if len(employee_nums) > 0:
-        with open("./employee_lines.txt", "a") as fp:
+        with open(record_file, "a") as fp:
             fp.write("\n".join(employee_infos))
             fp.write("\n\n")
         return max(employee_nums)

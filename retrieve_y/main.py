@@ -55,10 +55,13 @@ def retrieve_recruit_info(base_dir="data_txt", top_n=5):
                 pbar_retrieve.update(1)
 
 
-def match_recruit_info(base_dir="data_txt", target_file="./number_match.csv"):
+def match_recruit_info(base_dir="data_txt", target_file="./number_match.csv", record_file="./employee_lines.txt"):
     with open("./my_words/ban_words.txt", "r") as fp:
         ban_words = set([line.strip() for line in fp.readlines()])
 
+    # 清理下记录文件
+    with open(record_file, "w") as fp:
+        fp.write("")
     with open(target_file, "w") as fp:
         fp.write("year,file_name,employee_num\n")
 
@@ -75,7 +78,7 @@ def match_recruit_info(base_dir="data_txt", target_file="./number_match.csv"):
                 # 再分个句 不行就去掉 泪目
                 lines = split_paragraph(lines)
 
-                employee_num = match_employee_num(lines, year, ban_words)
+                employee_num = match_employee_num(lines, year, record_file, ban_words)
 
                 if employee_num >= 0:
                     with open(target_file, "a") as fp:
