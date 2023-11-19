@@ -52,19 +52,28 @@ def find_lda(texts: List[str], n_topics: int = 20, save: bool = True, save_path:
 
 
 # This is the code for lda using all data.
-if __name__ == '__main__':
-    total_folder_path = paths.all_data
-    year_folder = os.listdir(total_folder_path)
-    total_documents = []
-    for year in year_folder:
-        folder_path = os.path.join(total_folder_path, year)
-        documents = read_documents_from_folder(folder_path, html_stop_words)
-        total_documents.extend(documents)
-    find_lda(total_documents, 20, save=True,
-             save_path=paths.lda_model_save_path)
+# if __name__ == '__main__':
+#     total_folder_path = paths.all_data
+#     year_folder = os.listdir(total_folder_path)
+#     total_documents = []
+#     for year in year_folder:
+#         folder_path = os.path.join(total_folder_path, year)
+#         documents = read_documents_from_folder(folder_path, html_stop_words)
+#         total_documents.extend(documents)
+#     find_lda(total_documents, 20, save=True,
+#              save_path=paths.lda_model_save_path)
 
 # This is the code for lda using single year data.
 # if __name__ == '__main__':
 #     folder_path = paths.valuable_data_2017
 #     documents = read_documents_from_folder(folder_path)
 #     find_lda(documents)
+
+# This is the code for lda using single file.
+if __name__ == '__main__':
+    file_path = "/Users/weichentao/Documents/USC/2023fall/540/project/select_valuable/valuable/cleaned/2017/1750_000104746917004528_a2232622z10-k.htm.txt"
+    with open(file_path, 'r') as file:
+        lines = file.readlines()
+        cleaned_text = processor(lines, STOPWORDS)
+        find_lda(cleaned_text, 20, save=True,
+                 save_path=paths.lda_model_save_path)

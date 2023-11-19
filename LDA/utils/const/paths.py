@@ -7,4 +7,4 @@
 
 valuable_data_2017 = "/Users/weichentao/Documents/USC/2023fall/540/project/select_valuable/valuable/cleaned/2017"
 all_data = ""
-lda_model_save_path = ""
+lda_model_save_path = "/Users/weichentao/Documents/USC/2023fall/540/project/select_valuable/models/lda/lda_model"
