@@ -90,4 +90,4 @@ def match_recruit_info(base_dir="data_txt", target_file="./number_match.csv", re
 if __name__ == "__main__":
     # retrieve_recruit_info(top_n=10)
     match_recruit_info()
-    get_employee(csv_file="./number_match.csv", output_file="./employee_num.json")
+    get_employee()

@@ -3,7 +3,7 @@ import json
 
 
 # Create a dictionary to store the information
-def get_employee(csv_file, output_file):
+def get_employee(csv_file="./number_match.csv", output_file="./employee_num.json"):
     data = {}
 
     # Read the CSV file
