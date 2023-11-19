@@ -2,38 +2,45 @@ import re
 from num2words import num2words
 from word2number import w2n
 
-numbers = r"[\d, ()]+"
-english_numbers = [num2words(i) for i in range(21)]
+english_numbers = [num2words(i) for i in range(30)]
 verbs = ["have", "has", "had", "employed", "employ", "employs", "consisted of", "consists of", "made up of",
-         "makes of"]
-nouns = ["employee", "employees", "headcount", "teammates", "people", "persons", "team members"]
+         "makes of", "makes up of", "totaled"]
+nouns = ["employee", "employees", "full-time", "full time", "headcount", "teammates", "people", "persons",
+         "team members", "officers", "officer", "personnel", "staff"]
+date_prefix = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october",
+               "november", "december", "since", "year", "during", "fiscal"]
 
-pattern = fr"({'|'.join(verbs)})\s+([a-z]+\s)*?({numbers}|no|{'|'.join(english_numbers)})\s+([a-z-,]+\s)*?(?:{'|'.join(nouns)})"
+pattern = fr"({'|'.join(verbs)})\s+([a-zA-Z]+\s)*?(([\d, ()]+|no|an|{'|'.join(english_numbers)})( hundreds| thousands)*)\s+([a-zA-Z-]+\s)*?(?:{'|'.join(nouns)})"
 
 
 def convert_number(num_str):
-    if num_str.isdigit():
-        return int(num_str)
+    if "(" in num_str:
+        numbers = re.findall(r"([a-zA-Z0-9-,\s]*)\(([a-zA-Z0-9-,\s]+)", num_str)
+        for number in numbers:
+            for num in number:
+                num = convert_number(num.strip())
+                if num >= 0:
+                    return num
+        return -1
     elif num_str == "no":
         return 0
-    elif "(" in num_str:
-        numbers = num_str.split("(")
-        num1 = numbers[0].strip()
-        num2 = numbers[1].strip(")").strip()
-        if num1.isdigit():
-            return int(num1)
-        elif num2.isdigit():
-            return int(num2)
-        num1 = convert_number(num1)
-        num2 = convert_number(num2)
-        if num1:
-            return num1
-        else:
-            return num2
+    elif "hundreds" in num_str:
+        return convert_number(num_str.split()[0]) * 100
+    elif "thousands" in num_str:
+        return convert_number(num_str.split()[0]) * 1000
+    # remove spaces
+    num_str = re.sub(r"\s+", "", num_str)
     try:
         return w2n.word_to_num(num_str)
     except Exception as e:
-        return -1
+        pass
+    # remove numbers longer than 3
+    num_str = num_str.split(",")
+    num_str = [num[:3] for num in num_str]
+    num_str = "".join(num_str)
+    if num_str.isdigit():
+        return int(num_str)
+    return -1
 
 
 def useful_line(line, ban_words):
@@ -49,11 +56,15 @@ def match_line(line, ban_words):
     if not useful_line(line, ban_words):
         return -1
     res = re.findall(pattern, line)
-    if len(res) > 0:
-        employee_num = res[0][2].strip().replace(",", "")
-        employee_num = re.sub(r"\s+", "", employee_num)
+    for match in res:
+        if match[1].strip().lower() in date_prefix:
+            continue
+        employee_num = match[2].strip()
+        if employee_num.isdigit() and 2016 <= int(employee_num) <= 2022:
+            continue
+        employee_num = re.sub(r"\s+", " ", employee_num)
         employee_num = convert_number(employee_num)
-        if employee_num >= 0:
+        if 0 <= employee_num < 2000000:
             return employee_num
     return -1
 
