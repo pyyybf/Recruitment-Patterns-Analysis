@@ -23,15 +23,11 @@ def get_employee(csv_file, output_file):
 
             # Check if the CIK number already exists in the data dictionary
             if cik_number in data:
-                if year in data[cik_number]:
-                    # Append the data for the existing year
-                    data[cik_number][year].append(year_dict)
-                else:
-                    # Create a new entry for the year
-                    data[cik_number][year] = [year_dict]
+                # Create a new entry for the year
+                data[cik_number][year] = year_dict
             else:
                 # Create a new entry for the CIK number and year
-                data[cik_number] = {year: [year_dict]}
+                data[cik_number] = {year: year_dict}
 
     # Convert the data to JSON format
     json_data = json.dumps(data, indent=4)
