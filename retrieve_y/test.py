@@ -23,7 +23,7 @@ def get_samples(n_per_year, sample_dir="./data_sample"):
 if __name__ == "__main__":
     get_samples(10)
     # retrieve_recruit_info("./data_sample")
-    match_recruit_info(base_dir="./unmatch_txt",
+    match_recruit_info(base_dir="./data_sample",
                        target_file="./test_number_match.csv",
                        record_file="./test_employee_lines.txt")
     get_employee(csv_file="./test_number_match.csv", output_file="./test_employee_num.json")
