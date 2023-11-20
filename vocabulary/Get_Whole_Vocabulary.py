@@ -8,6 +8,7 @@ import os
 from nltk.tokenize import word_tokenize
 import json
 import ast
+import shutil
 
 
 # ## Get the number of documents
@@ -80,10 +81,26 @@ def save_json_file(file_path, data):
 # In[7]:
 
 
+def clear_dir(dir_path):
+    if os.path.exists(dir_path):
+        shutil.rmtree(dir_path)
+    os.makedirs(dir_path)
+
+
+# In[8]:
+
+
+clear_dir('Vocabulary/word')
+clear_dir('Vocabulary/word_counts')
+
+
+# In[9]:
+
+
 word_counts_total = {}
 Whole_Vocabulary = set()
 
-for year in range(2016, 2022):
+for year in range(2016, 2023):
     year = str(year)
     Year_Vocabulary = get_whole_year_vocabulary(f'vocabulary_sets/{year}_vocabulary_sets.json')
     
@@ -102,15 +119,21 @@ for year in range(2016, 2022):
             word_counts_total[key] = word_counts_total.get(key, 0) + word_counts_year.get(key, 0)
 
 
-# In[8]:
+# In[10]:
 
 
 Whole_Vocabulary = list(Whole_Vocabulary)
 save_json_file('Vocabulary/word/Whole_Vocabulary.json', Whole_Vocabulary)
 
 
-# In[9]:
+# In[11]:
 
 
 save_json_file('Vocabulary/word_counts/word_counts_total.json', word_counts_total)
+
+
+# In[ ]:
+
+
+
 
