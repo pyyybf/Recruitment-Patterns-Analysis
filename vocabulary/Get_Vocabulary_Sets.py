@@ -87,8 +87,9 @@ def get_vocabulary_sets(folder_path):
 # In[7]:
 
 
-folder_path_list = ["data_split/train_data/2016", "data_split/train_data/2017", "data_split/train_data/2018", 
-                    "data_split/train_data/2019", "data_split/train_data/2020", "data_split/train_data/2021"]
+folder_path_list = ["data_split/train_data/2016", "data_split/train_data/2017", 
+                    "data_split/train_data/2018", "data_split/train_data/2019", 
+                    "data_split/train_data/2020", "data_split/train_data/2021", "data_split/train_data/2022"]
 for folder_path in folder_path_list:
     get_vocabulary_sets(folder_path)
 
