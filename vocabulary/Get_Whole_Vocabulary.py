@@ -19,6 +19,18 @@ import ast
 # In[2]:
 
 
+def load_json_file(file_path):
+    try:
+        with open(file_path, 'r') as file:
+            data = json.load(file)
+    except FileNotFoundError:
+        data = []
+    return data
+
+
+# In[3]:
+
+
 def read_vocabulary_sets(file_path):
     with open(file_path, 'r') as file:
         vocabulary_sets = file.read()
@@ -27,7 +39,7 @@ def read_vocabulary_sets(file_path):
     return vocabulary_sets 
 
 
-# In[3]:
+# In[4]:
 
 
 def get_whole_year_vocabulary(file_path):  
@@ -42,7 +54,7 @@ def get_whole_year_vocabulary(file_path):
     return Vocabulary
 
 
-# In[4]:
+# In[5]:
 
 
 def get_whole_year_vocabulary_word_counts(file_path):
@@ -57,18 +69,18 @@ def get_whole_year_vocabulary_word_counts(file_path):
     return word_counts
 
 
-# In[5]:
+# In[6]:
 
 
-def save_file(file_path, data):
+def save_json_file(file_path, data):
     with open(file_path, 'w') as file:
         json.dump(data, file)
 
 
-# In[6]:
+# In[7]:
 
 
-word_counts_by_year = {}
+word_counts_total = {}
 Whole_Vocabulary = set()
 
 for year in range(2016, 2022):
@@ -77,38 +89,28 @@ for year in range(2016, 2022):
     
     Whole_Vocabulary = Whole_Vocabulary.union(Year_Vocabulary)
     
-    word_counts = get_whole_year_vocabulary_word_counts(f'vocabulary_sets/{year}_vocabulary_sets.json')
-    for word, count in word_counts.items():
-        word_counts_by_year.setdefault(word, {}).update({year: count})
-    
+    word_counts_year = get_whole_year_vocabulary_word_counts(f'vocabulary_sets/{year}_vocabulary_sets.json')
+
     Year_Vocabulary = list(Year_Vocabulary)
-    save_file(f'Vocabulary/word/{year}_Vocabulary.json', Year_Vocabulary)
-    save_file(f'Vocabulary/word_counts/{year}_word_counts.json', word_counts)
+    save_json_file(f'Vocabulary/word/{year}_Vocabulary.json', Year_Vocabulary)
+    save_json_file(f'Vocabulary/word_counts/{year}_word_counts.json', word_counts_year)
     
-word_counts_total = {word: sum(counts.values()) for word, counts in word_counts_by_year.items()}
-
-
-# In[7]:
-
-
-Whole_Vocabulary = list(Whole_Vocabulary)
-save_file('Vocabulary/word/Whole_Vocabulary.json', Whole_Vocabulary)
+    if year=='2016':
+        word_counts_total = word_counts_year
+    else:
+        for key in set(word_counts_total.keys()) | set(word_counts_year.keys()):
+            word_counts_total[key] = word_counts_total.get(key, 0) + word_counts_year.get(key, 0)
 
 
 # In[8]:
 
 
-save_file('Vocabulary/word_counts/word_counts_total.json', word_counts_total)
+Whole_Vocabulary = list(Whole_Vocabulary)
+save_json_file('Vocabulary/word/Whole_Vocabulary.json', Whole_Vocabulary)
 
 
-# In[ ]:
+# In[9]:
 
 
-
-
-
-# In[ ]:
-
-
-
+save_json_file('Vocabulary/word_counts/word_counts_total.json', word_counts_total)
 
