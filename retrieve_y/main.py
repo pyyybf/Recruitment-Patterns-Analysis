@@ -2,6 +2,7 @@ import csv
 import os
 from tqdm import tqdm
 
+from utils.split_train_test import split_train_test
 from utils import fs
 from utils.match_tool import match_employee_num
 from utils.retrieval_tool import Lines2Matrix, retrieve_top_n_idx, split_paragraph, merge_paragraph
@@ -92,3 +93,4 @@ if __name__ == "__main__":
     match_recruit_info()
     get_employee()
     get_change_rate()
+    split_train_test()
