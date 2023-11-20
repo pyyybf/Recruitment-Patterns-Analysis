@@ -5,7 +5,7 @@ import shutil
 def clear_dir(dir_path):
     if os.path.exists(dir_path):
         shutil.rmtree(dir_path)
-    os.mkdir(dir_path)
+    os.makedirs(dir_path)
 
 
 def list_dir(dir_path):
