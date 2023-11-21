@@ -1,2 +1,3 @@
-def twosum(a,v):
-    return sum(a, v)
+import torch
+
+print(torch.__version__)
