@@ -11,12 +11,13 @@ import os
 import numpy as np
 import csv
 import re
+import shutil
 
 
 # In[2]:
 
 
-def load_file(file_path):
+def load_json_file(file_path):
     try:
         with open(file_path, 'r') as file:
             data = json.load(file)
@@ -28,7 +29,7 @@ def load_file(file_path):
 # In[3]:
 
 
-def save_file(file_path, data):
+def save_json_file(file_path, data):
     with open(file_path, 'w') as file:
         json.dump(data, file)
 
@@ -36,13 +37,13 @@ def save_file(file_path, data):
 # In[4]:
 
 
-Vocabulary = load_file('Vocabulary/word/Whole_Vocabulary.json')
+Vocabulary = load_json_file('Vocabulary/word/Whole_Vocabulary.json')
 
 
 # In[5]:
 
 
-word_counts_total = load_file('Vocabulary/word_counts/word_counts_total.json')
+word_counts_total = load_json_file('Vocabulary/word_counts/word_counts_total.json')
 
 
 # In[6]:
@@ -68,7 +69,6 @@ def calculate_TF(file_path):
 def get_the_number_of_documents(folder_path):
     try:
         files = os.listdir(folder_path)
-
         number_of_documents = len(files)
 
         return number_of_documents
@@ -81,10 +81,9 @@ def get_the_number_of_documents(folder_path):
 
 
 number_of_documents_by_year = {}
-for year in range(2016, 2022):
+for year in range(2016, 2023):
     year = str(year)
-    number_of_documents = get_the_number_of_documents(f'data/{year}')
-
+    number_of_documents = get_the_number_of_documents(f'data_split/train_data/{year}')
     number_of_documents_by_year[year] = number_of_documents
 
 number_of_documents_in_total = sum(number_of_documents_by_year.values())
@@ -132,6 +131,15 @@ def calculate_TFIDF(file_path, IDF):
 # In[12]:
 
 
+def get_cik(file_name):
+    match = re.search(r'^(\d+)_', file_name)
+    cik = int(match.group(1))
+    return cik
+
+
+# In[13]:
+
+
 def get_TFIDF(folder_path, IDF):
     year = folder_path[-4:]
     file_list = os.listdir(folder_path)
@@ -146,49 +154,44 @@ def get_TFIDF(folder_path, IDF):
         
         Company_year_info = {}
         Company_year_info["FILE_NAME"] = file_name
-        match = re.search(r'^(\d+)_', file_name)
-        cik = int(match.group(1))
+        cik = get_cik(file_name)
         Company_year_info["CIK"] = cik
         Company_year_info["YEAR"] = year
         
         Company_year_TFIDF = {**Company_year_info, **TFIDF_dict}
         
-        TFIDF_path = 'Results/TFIDF/TFIDF.json'
+        TFIDF_path = f'Results/TFIDF/json_file/{year}_TFIDF.json'
         
         # Add new TFIDF_dict to TFIDF Json File
-        TFIDF = load_file(TFIDF_path)
+        TFIDF = load_json_file(TFIDF_path)
         TFIDF.append(Company_year_TFIDF)
-        save_file(TFIDF_path, TFIDF)
-
-
-# In[13]:
-
-
-folder_path_list = ["data/2016", "data/2017", "data/2018", "data/2019", "data/2020", "data/2021"]
-for folder_path in folder_path_list:
-    get_TFIDF(folder_path, IDF)
+        save_json_file(TFIDF_path, TFIDF)
 
 
 # In[14]:
 
 
-def json_to_csv(csv_file_name, json_file):
-    with open(csv_file_name, 'w', newline='') as csv_file:
-        fieldnames = json_file[0].keys()
-        
-        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
-        
-        writer.writeheader()
-        
-        writer.writerows(json_file)
-        
+def clear_dir(dir_path):
+    if os.path.exists(dir_path):
+        shutil.rmtree(dir_path)
+    os.makedirs(dir_path)
 
 
 # In[15]:
 
 
-TFIDF = load_file('Results/TFIDF/TFIDF.json')
-json_to_csv('Results/TFIDF/TFIDF.csv', TFIDF)
+clear_dir('Results/TFIDF/json_file')
+
+
+# In[16]:
+
+
+folder_path_list = ["data_split/train_data/2016", "data_split/train_data/2017", 
+                    "data_split/train_data/2018", "data_split/train_data/2019", 
+                    "data_split/train_data/2020", "data_split/train_data/2021", 
+                    "data_split/train_data/2022"]
+for folder_path in folder_path_list:
+    get_TFIDF(folder_path, IDF)
 
 
 # In[ ]:
