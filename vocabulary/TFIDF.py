@@ -14,7 +14,7 @@ import re
 import shutil
 from tqdm import tqdm
 
-data_base_dir = "/Users/panyue/study/ISE540_Text_Analytics/project/code/data_split/train_data"
+data_base_dir = "./data_split/train_data"
 years = list(range(2016, 2022 + 1))
 whole_vocabulary_json_path = './word/Whole_Vocabulary.json'
 word_counts_total_json_path = './word_counts/word_counts_total.json'
@@ -163,7 +163,7 @@ def save_TFIDF_to_csv(folder_path, IDF):
 
                 Company_year_TFIDF = {
                     "FILE_NAME": file_name,
-                    "CIK": get_cik(file_name),
+                    "CIK": file_name.split("_")[0],
                     "YEAR": year,
                     **TFIDF_dict
                 }
