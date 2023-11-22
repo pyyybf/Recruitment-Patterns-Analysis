@@ -1,5 +1,6 @@
 import csv
 import json
+import numpy as np
 
 
 # Create a dictionary to store the information
@@ -37,23 +38,23 @@ def get_employee(csv_file="./number_match.csv", output_file="./employee_num.json
         json_file.write(json_data)
 
 
-def get_change_rate(source_file="./employee_num.json", target_file="./change_rate.csv"):
-    with open(source_file, "r") as file:
-        employee_num_data = json.load(file)
-
-    with open(target_file, "w") as fp:
-        fp.write("cik,from_year,from_num,to_year,to_num,change_rate,from_filename,to_filename\n")
-        for cik, data in employee_num_data.items():
-            years = sorted(data)
-            for i in range(1, len(years)):
-                from_file = data[years[i - 1]]["file_name"]
-                to_file = data[years[i]]["file_name"]
-
-                from_num = data[years[i - 1]]["employee_num"]
-                to_num = data[years[i]]["employee_num"]
-                change_rate = (to_num - from_num) / (from_num if from_num > 0 else 1)
-
-                fp.write(f"{cik},{years[i - 1]},{from_num},{years[i]},{to_num},{change_rate},{from_file},{to_file}\n")
+# def get_change_rate(source_file="./employee_num.json", target_file="./change_rate.csv"):
+#     with open(source_file, "r") as file:
+#         employee_num_data = json.load(file)
+#
+#     with open(target_file, "w") as fp:
+#         fp.write("cik,from_year,from_num,to_year,to_num,change_rate,from_filename,to_filename\n")
+#         for cik, data in employee_num_data.items():
+#             years = sorted(data)
+#             for i in range(1, len(years)):
+#                 from_file = data[years[i - 1]]["file_name"]
+#                 to_file = data[years[i]]["file_name"]
+#
+#                 from_num = data[years[i - 1]]["employee_num"]
+#                 to_num = data[years[i]]["employee_num"]
+#                 change_rate = (to_num - from_num) / (from_num if from_num > 0 else 1)
+#
+#                 fp.write(f"{cik},{years[i - 1]},{from_num},{years[i]},{to_num},{change_rate},{from_file},{to_file}\n")
 
 
 def split_row_filled(prefix="train"):

@@ -39,9 +39,11 @@ def split_train_test():
         for row in rows:
             row_data = {
                 "cik": row["cik"],
+                "2016_num": row["2016"],
                 "2016_file": row["2016_file"]
             }
             for year in range(2017, 2023):
+                row_data[f"{year}_num"] = row[str(year)]
                 row_data[f"{year}_file"] = row[f"{year}_file"]
                 pre_num = row[str(year - 1)]
                 cur_num = row[str(year)]
@@ -59,8 +61,10 @@ def split_train_test():
                 row_data[str(year)] = change_rate
             data.append(row_data)
 
-    fieldnames = ["cik", "2017", "2018", "2019", "2020", "2021", "2022",
-                  "2016_file", "2017_file", "2018_file", "2019_file", "2020_file", "2021_file", "2022_file"]
+    fieldnames = ["cik"]
+    fieldnames += [str(year) for year in range(2017, 2023)]
+    fieldnames += [f"{year}_num" for year in range(2016, 2023)]
+    fieldnames += [f"{year}_file" for year in range(2016, 2023)]
     with open("./change_rate.csv", 'w', newline='') as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
@@ -83,6 +87,8 @@ def split_train_test():
         writer.writeheader()
         writer.writerows(test_set)
 
+
+def split_data_file():
     for prefix in ["train", "test"]:
         fs.clear_dir(f"./{prefix}_data")
         for year in range(2016, 2023):
