@@ -56,6 +56,49 @@ def get_change_rate(source_file="./employee_num.json", target_file="./change_rat
                 fp.write(f"{cik},{years[i - 1]},{from_num},{years[i]},{to_num},{change_rate},{from_file},{to_file}\n")
 
 
+def split_row_filled(prefix="train"):
+    with open(f"./{prefix}_change_rate.csv", "r") as source:
+        rows = csv.DictReader(source)
+        with open(f"./{prefix}_change_rate_filled.csv", "w") as target:
+            writer = csv.DictWriter(target, fieldnames=["cik", "file_name", "year", "change_rate"])
+            writer.writeheader()
+
+            for row in rows:
+                change_rates = []
+                for year in range(2017, 2023):
+                    if row[str(year)] != "":
+                        change_rates.append(float(row[str(year)]))
+                fill_val = np.mean(change_rates)
+
+                for year in range(2017, 2023):
+                    row_data = {
+                        "cik": row["cik"],
+                        "file_name": row[f"{year}_file"],
+                        "year": year,
+                        "change_rate": row[str(year)] if row[str(year)] != "" else fill_val,
+                    }
+                    writer.writerow(row_data)
+
+
+def split_row_unfilled(prefix="train"):
+    with open(f"./{prefix}_change_rate.csv", "r") as source:
+        rows = csv.DictReader(source)
+        with open(f"./{prefix}_change_rate_unfilled.csv", "w") as target:
+            writer = csv.DictWriter(target, fieldnames=["cik", "file_name", "year", "change_rate"])
+            writer.writeheader()
+
+            for row in rows:
+                for year in range(2017, 2023):
+                    if row[str(year)] != "":
+                        row_data = {
+                            "cik": row["cik"],
+                            "file_name": row[f"{year}_file"],
+                            "year": year,
+                            "change_rate": row[str(year)],
+                        }
+                        writer.writerow(row_data)
+
+
 if __name__ == "__main__":
     csv_file = "C:/Alycia/USC/2023Fall/ISE540/Project/retrieve_y_result/test_csv/result.csv"
     output_file = "C:/Alycia/USC/2023Fall/ISE540/Project/retrieve_y_result/test_csv/results.json"

@@ -6,7 +6,7 @@ from utils.split_train_test import split_train_test
 from utils import fs
 from utils.match_tool import match_employee_num
 from utils.retrieval_tool import Lines2Matrix, retrieve_top_n_idx, split_paragraph, merge_paragraph
-from utils.get_employee import get_employee, get_change_rate
+from utils.get_employee import get_employee, get_change_rate, split_row_filled, split_row_unfilled
 
 
 def retrieve_recruit_info(base_dir="data_txt", top_n=5):
@@ -94,3 +94,6 @@ if __name__ == "__main__":
     get_employee()
     get_change_rate()
     split_train_test()
+    for prefix in ["train", "test"]:
+        split_row_filled(prefix=prefix)
+        split_row_unfilled(prefix=prefix)
