@@ -10,7 +10,6 @@ from utils.get_employee import get_employee, get_change_rate, split_row_filled, 
 
 
 def retrieve_recruit_info(base_dir="data_txt", top_n=5):
-    # TODO: 目前先分成两部分试试
     # 先读下数据文件
     data_file_name = "recruit_number.csv"
     with open(f"./recruit_text/{data_file_name}", "r") as fp:

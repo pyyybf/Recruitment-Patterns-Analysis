@@ -4,7 +4,7 @@ import shutil
 
 from utils.get_employee import get_employee, get_change_rate
 from utils import fs
-from main import retrieve_recruit_info, match_recruit_info
+from retrieve_y import retrieve_recruit_info, match_recruit_info
 
 
 def get_samples(n_per_year, sample_dir="./data_sample"):
