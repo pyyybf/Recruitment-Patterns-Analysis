@@ -11,8 +11,12 @@ def split_train_test():
     with open("./employee_num.json", "r") as file:
         employee_num_data = json.load(file)
 
+    time_num_headers = ["cik"]
+    time_num_headers += [str(year) for year in range(2016, 2023)]
+    time_num_headers += [f"{year}_file" for year in range(2016, 2023)]
+
     with open("./time_num.csv", "w") as time_num_csv:
-        time_num_csv.write("cik,2016,2017,2018,2019,2020,2021,2022,2016_file,2017_file,2018_file,2019_file,2020_file,2021_file,2022_file\n")
+        time_num_csv.write(f"{','.join(time_num_headers)}\n")
         for cik, data in employee_num_data.items():
             nums = []
             file_names = []
