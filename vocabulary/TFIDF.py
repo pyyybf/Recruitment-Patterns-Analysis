@@ -12,12 +12,13 @@ import numpy as np
 import csv
 import re
 import shutil
+from tqdm import tqdm
 
 data_base_dir = "/Users/panyue/study/ISE540_Text_Analytics/project/code/data_split/train_data"
 years = list(range(2016, 2022 + 1))
-whole_vocabulary_json_path = 'Vocabulary/word/Whole_Vocabulary.json'
-word_counts_total_json_path = 'Vocabulary/word_counts/word_counts_total.json'
-result_dir = 'Results/TFIDF/json_file'
+whole_vocabulary_json_path = './word/Whole_Vocabulary.json'
+word_counts_total_json_path = './word_counts/word_counts_total.json'
+result_dir = './TFIDF/csv_file'
 
 
 # In[2]:
@@ -44,6 +45,7 @@ def save_json_file(file_path, data):
 
 
 Vocabulary = load_json_file(whole_vocabulary_json_path)
+result_csv_headers = ["FILE_NAME", "CIK", "YEAR"] + Vocabulary
 
 # In[5]:
 
@@ -142,6 +144,34 @@ def get_cik(file_name):
 
 # In[13]:
 
+def save_TFIDF_to_csv(folder_path, IDF):
+    year = folder_path[-4:]
+    file_list = os.listdir(folder_path)
+
+    text_files = [file for file in file_list if file.endswith(".txt")]
+
+    with open(f"{result_dir}/{year}_TFIDF.csv", "w") as fp:
+        writer = csv.DictWriter(fp, fieldnames=result_csv_headers)
+        writer.writeheader()
+
+        with tqdm(total=len(text_files), unit="file",
+                  desc=f"Get TDIDF of {year}") as pbar_tfidf:
+            for file_name in text_files:
+                file_path = os.path.join(folder_path, file_name)
+
+                TFIDF_dict = calculate_TFIDF(file_path, IDF)
+
+                Company_year_TFIDF = {
+                    "FILE_NAME": file_name,
+                    "CIK": get_cik(file_name),
+                    "YEAR": year,
+                    **TFIDF_dict
+                }
+
+                # Add new TFIDF_dict to TFIDF csv File
+                writer.writerow(Company_year_TFIDF)
+                pbar_tfidf.update(1)
+
 
 def get_TFIDF(folder_path, IDF):
     year = folder_path[-4:]
@@ -193,6 +223,7 @@ folder_path_list = [f"{data_base_dir}/{year}" for year in years]
 #                     "data_split/train_data/2020", "data_split/train_data/2021",
 #                     "data_split/train_data/2022"]
 for folder_path in folder_path_list:
-    get_TFIDF(folder_path, IDF)
+    # get_TFIDF(folder_path, IDF)
+    save_TFIDF_to_csv(folder_path, IDF)
 
 # In[ ]:
