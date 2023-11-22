@@ -154,8 +154,7 @@ def save_TFIDF_to_csv(folder_path, IDF):
         writer = csv.DictWriter(fp, fieldnames=result_csv_headers)
         writer.writeheader()
 
-        with tqdm(total=len(text_files), unit="file",
-                  desc=f"Get TDIDF of {year}") as pbar_tfidf:
+        with tqdm(total=len(text_files), unit="file", desc=f"Get TFIDF of {year}") as pbar_tfidf:
             for file_name in text_files:
                 file_path = os.path.join(folder_path, file_name)
 
