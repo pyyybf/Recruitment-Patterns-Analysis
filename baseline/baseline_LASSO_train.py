@@ -32,7 +32,7 @@ def process_files_and_train_multi_target_model(folder_path, years, y_train_file,
     joblib.dump(multi_lasso_reg, model_file)
     print(f"Multi-target model saved as {model_file}")
 
-# Usage
+
 folder_path = 'path/to/your/csv/files'
 years = ["2016", "2017", "2018", "2019", "2020", "2021", "2022"]
 y_train_file = 'train_y.csv'
