@@ -9,12 +9,17 @@ import os
 from nltk.tokenize import word_tokenize
 import re
 import csv
-
+import shutil
+from tqdm import tqdm
 
 # In[2]:
 
+data_base_dir = "./data_split/train_data"
+years = list(range(2016, 2022 + 1))
+whole_vocabulary_json_path = './word/Whole_Vocabulary.json'
+result_dir = './Incidence_Matrix/csv_file'
 
-def load_file(file_path):
+def load_json_file(file_path):
     try:
         with open(file_path, 'r') as file:
             data = json.load(file)
@@ -26,13 +31,14 @@ def load_file(file_path):
 # In[3]:
 
 
-Vocabulary = load_file('Vocabulary/word/Whole_Vocabulary.json')
+Vocabulary = load_json_file(whole_vocabulary_json_path)
+result_csv_headers = ["FILE_NAME", "CIK", "YEAR"] + Vocabulary
 
 
 # In[4]:
 
 
-def save_file(file_path, data):
+def save_json_file(file_path, data):
     with open(file_path, 'w') as file:
         json.dump(data, file)
 
@@ -44,7 +50,7 @@ def extract_vocabulary(file_content):
     file_content = file_content.replace("\n", " ")
     word_list = word_tokenize(file_content)
     vocabulary = set(word_list)
-    
+
     return vocabulary
 
 
@@ -65,8 +71,35 @@ def get_Incidence(file_path, vocabulary_dict):
 
 
 # In[7]:
+def save_Incidence_Matrix_to_csv(folder_path, vocabulary_dict):
+    year = folder_path[-4:]
+    file_list = os.listdir(folder_path)
+
+    text_files = [file for file in file_list if file.endswith(".txt")]
+
+    with open(f"{result_dir}/{year}_Incidence_Matrix.csv", "w") as fp:
+        writer = csv.DictWriter(fp, fieldnames=result_csv_headers)
+        writer.writeheader()
+
+        with tqdm(total=len(text_files), unit="file", desc=f"Get Incidence_Matrix of {year}") as pbar_tfidf:
+            for file_name in text_files:
+                file_path = os.path.join(folder_path, file_name)
+
+                Incidence_dict = get_Incidence(file_path, vocabulary_dict)
+
+                Company_year_Incidence_Matrix = {
+                    "FILE_NAME": file_name,
+                    "CIK": file_name.split("_")[0],
+                    "YEAR": year,
+                    **Incidence_dict
+                }
+
+                # Add new Incidence_dict to Incidence_Matrix csv File
+                writer.writerow(Company_year_Incidence_Matrix)
+                pbar_tfidf.update(1)
 
 
+# In[8]:
 def get_Incidence_Matrix(folder_path, vocabulary_dict):
     year = folder_path[-4:]
     file_list = os.listdir(folder_path)
@@ -88,40 +121,26 @@ def get_Incidence_Matrix(folder_path, vocabulary_dict):
         
         Company_year_Incidence = {**Company_year_info, **Incidence_dict}
         
-        Incidence_Matrix_path = 'Results/Incidence_Matrix/Incidence_Matrix.json'
+        Incidence_Matrix_path = f'{result_dir}/{year}_Incidence_Matrix.json'
         
         # Add new TFIDF_dict to TFIDF Json File
-        Incidence_Matrix = load_file(Incidence_Matrix_path)
+        Incidence_Matrix = load_json_file(Incidence_Matrix_path)
         Incidence_Matrix.append(Company_year_Incidence)
-        save_file(Incidence_Matrix_path, Incidence_Matrix)
-
-
-# In[8]:
-
-
-folder_path_list = ["data/2016", "data/2017", "data/2018", "data/2019", "data/2020", "data/2021"]
-for folder_path in folder_path_list:
-    get_Incidence_Matrix(folder_path, Vocabulary)
+        save_json_file(Incidence_Matrix_path, Incidence_Matrix)
 
 
 # In[9]:
 
+def clear_dir(dir_path):
+    if os.path.exists(dir_path):
+        shutil.rmtree(dir_path)
+    os.makedirs(dir_path)
 
-def json_to_csv(csv_file_name, json_file):
-    with open(csv_file_name, 'w', newline='') as csv_file:
-        fieldnames = json_file[0].keys()
-        
-        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
-        
-        writer.writeheader()
-        
-        writer.writerows(json_file)
-        
+clear_dir(result_dir)
 
 
 # In[10]:
 
-
-Incidence_Matrix = load_file('Results/Incidence_Matrix/Incidence_Matrix.json')
-json_to_csv('Results/Incidence_Matrix/Incidence_Matrix.csv', Incidence_Matrix)
-
+folder_path_list = [f"{data_base_dir}/{year}" for year in years]
+for folder_path in folder_path_list:
+    save_Incidence_Matrix_to_csv(folder_path, Vocabulary)
