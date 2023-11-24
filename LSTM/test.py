@@ -1,41 +1,47 @@
 # test.py
 
+# train.py
 import torch
+import torch.optim as optim
 from torch.utils.data import DataLoader, TensorDataset
+from sklearn.model_selection import train_test_split
 from model import LSTMClassifier
 import torch.nn.functional as F
+import os
+import pandas as pd
+from dataloader import CSVDataset
+from sklearn.metrics import accuracy_score, confusion_matrix
 
-# 加载测试数据
-# 这里需要替换为您的实际数据加载逻辑
-X_test = torch.randn(20, 6, 100)  # 示例数据
-y_test = torch.randint(0, 3, (20,))  # 示例标签（3分类问题）
+# 假设您的TF-IDF矩阵和标签如下
+# 这里需要导入或生成您的TF-IDF矩阵和标签
 
-# 将标签转换为one-hot编码
-y_test = F.one_hot(y_test, num_classes=3).float()
 
-# 创建DataLoader
-test_data = TensorDataset(X_test, y_test)
-test_loader = DataLoader(test_data, batch_size=10, shuffle=False)
+csv_files_test = ['source/train_data/sample/2017.csv', 'source/train_data/sample/2018.csv', 'source/train_data/sample/2019.csv',
+                  'source/train_data/sample/2020.csv', 'source/train_data/sample/2021.csv', 'source/train_data/sample/2022.csv']
+label_files_test = ['source/train_data/label/label_2017.csv', 'source/train_data/label/label_2018.csv', 'source/train_data/label/label_2019.csv',
+                    'source/train_data/label/label_2020.csv', 'source/train_data/label/label_2021.csv', 'source/train_data/label/label_2022.csv']
 
-# 模型参数
-input_dim = 100
-hidden_dim = 64
-output_dim = 3
-num_layers = 1
 
-# 加载模型
-model = LSTMClassifier(input_dim, hidden_dim, output_dim, num_layers)
+model = LSTMClassifier(input_dim=19, hidden_dim=64, output_dim=2, num_layers=3)
 model.load_state_dict(torch.load('lstm_model.pth'))
 model.eval()
 
-# 测试模型
-correct = 0
-total = 0
-with torch.no_grad():
-    for inputs, labels in test_loader:
-        outputs = model(inputs)
-        _, predicted = torch.max(outputs.data, 1)
-        total += labels.size(0)
-        correct += (predicted == labels).sum().item()
+test_dataset = CSVDataset(csv_files_test, label_files_test)
+test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
-print(f'Accuracy: {100 * correct / total}%')
+all_labels = []
+all_predictions = []
+
+with torch.no_grad():
+    for data, labels in test_loader:
+        outputs = model(data)
+        _, predicted = torch.max(outputs, 1)
+        all_labels.extend(labels.numpy())
+        all_predictions.extend(predicted.numpy())
+
+# 计算性能指标
+accuracy = accuracy_score(all_labels, all_predictions)
+conf_matrix = confusion_matrix(all_labels, all_predictions)
+
+print(f"Accuracy: {accuracy}")
+print(f"Confusion Matrix:\n{conf_matrix}")

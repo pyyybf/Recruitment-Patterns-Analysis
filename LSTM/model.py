@@ -12,13 +12,12 @@ class LSTMClassifier(nn.Module):
         # LSTM 输出的形状是 (batch_size, seq_length, hidden_dim)
         lstm_out, _ = self.lstm(x)
 
-        # 应用全连接层到每个时间步
-        # 这里使用了一个技巧：将三维张量 (batch_size, seq_length, hidden_dim) 重塑为二维张量 (batch_size * seq_length, hidden_dim)，以便能够使用全连接层
-        batch_size, seq_length, hidden_dim = lstm_out.shape
-        lstm_out = lstm_out.contiguous().view(batch_size * seq_length, hidden_dim)
-        out = self.fc(lstm_out)
+        # 只取序列中的最后一个时间步的输出
+        # lstm_out的形状是(batch_size, seq_length, hidden_dim)
+        last_time_step_out = lstm_out[:, -1, :]
 
-        # 将输出重塑回 (batch_size, seq_length, output_dim) 的形状
-        out = out.view(batch_size, seq_length, -1)
+        # 将最后一个时间步的输出传递给全连接层
+        out = self.fc(last_time_step_out)
 
+        # out的形状是(batch_size, output_dim)，不需要再次重塑
         return out
