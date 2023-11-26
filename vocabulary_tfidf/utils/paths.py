@@ -1,4 +1,8 @@
-data_base_dir = "./data_split/train_data"
-whole_vocabulary_json_path = "./word/Whole_Vocabulary.json"
-word_counts_total_json_path = "./word_counts/word_counts_total.json"
-result_dir = "./TFIDF"
+train_dir = "./data_split/train_data"
+
+vocabulary_sets_dir = "./vocabulary_sets"
+vocabulary_word_dir = "./Vocabulary/word"
+vocabulary_word_counts_dir = "./Vocabulary/word_counts"
+
+tfidf_dir = "./TFIDF"
+incmat_dir = "./Incidence_Matrix"

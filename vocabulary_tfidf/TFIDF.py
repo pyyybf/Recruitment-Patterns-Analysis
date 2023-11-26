@@ -1,35 +1,18 @@
-import json
 from nltk.tokenize import word_tokenize
 from collections import Counter
 import os
 import numpy as np
 import csv
 import re
-import shutil
 from tqdm import tqdm
 
-from utils import paths
+from utils import paths, fs
 
 years = list(range(2016, 2022 + 1))
 
-
-def load_json_file(file_path):
-    try:
-        with open(file_path, 'r') as file:
-            data = json.load(file)
-    except FileNotFoundError:
-        data = []
-    return data
-
-
-def save_json_file(file_path, data):
-    with open(file_path, 'w') as file:
-        json.dump(data, file)
-
-
-Vocabulary = load_json_file(paths.whole_vocabulary_json_path)
+Vocabulary = fs.load_json_file(f"{paths.vocabulary_word_dir}/Whole_Vocabulary.json")
+word_counts_total = fs.load_json_file(f"{paths.vocabulary_word_counts_dir}/word_counts_total.json")
 result_csv_headers = ["FILE_NAME", "CIK", "YEAR"] + Vocabulary
-word_counts_total = load_json_file(paths.word_counts_total_json_path)
 
 
 def calculate_TF(file_path):
@@ -60,7 +43,7 @@ def get_the_number_of_documents(folder_path):
 number_of_documents_by_year = {}
 for year in range(2016, 2023):
     year = str(year)
-    number_of_documents = get_the_number_of_documents(f'{paths.data_base_dir}/{year}')
+    number_of_documents = get_the_number_of_documents(f'{paths.train_dir}/{year}')
     number_of_documents_by_year[year] = number_of_documents
 
 number_of_documents_in_total = sum(number_of_documents_by_year.values())
@@ -106,7 +89,7 @@ def save_TFIDF_to_csv(folder_path, IDF):
     text_files = [file for file in file_list if file.endswith(".txt")]
     # text_files = sorted(text_files, key=lambda filename: int(filename.split("_")[0]))
 
-    with open(f"{paths.result_dir}/{year}_TFIDF.csv", "w") as fp:
+    with open(f"{paths.tfidf_dir}/{year}_TFIDF.csv", "w") as fp:
         writer = csv.DictWriter(fp, fieldnames=result_csv_headers)
         writer.writeheader()
 
@@ -147,23 +130,17 @@ def get_TFIDF(folder_path, IDF):
 
         Company_year_TFIDF = {**Company_year_info, **TFIDF_dict}
 
-        TFIDF_path = f'{result_dir}/{year}_TFIDF.json'
+        TFIDF_path = f'{paths.tfidf_dir}/{year}_TFIDF.json'
 
         # Add new TFIDF_dict to TFIDF Json File
-        TFIDF = load_json_file(TFIDF_path)
+        TFIDF = fs.load_json_file(TFIDF_path)
         TFIDF.append(Company_year_TFIDF)
-        save_json_file(TFIDF_path, TFIDF)
+        fs.save_json_file(TFIDF_path, TFIDF)
 
 
-def clear_dir(dir_path):
-    if os.path.exists(dir_path):
-        shutil.rmtree(dir_path)
-    os.makedirs(dir_path)
+fs.clear_dir(paths.tfidf_dir)
 
-
-clear_dir(paths.result_dir)
-
-folder_path_list = [f"{paths.data_base_dir}/{year}" for year in years]
+folder_path_list = [f"{paths.train_dir}/{year}" for year in years]
 for folder_path in folder_path_list:
-    # get_TFIDF(folder_path, IDF)
+    # get_TFIDF(folder_path, IDF)  # JSON too slow
     save_TFIDF_to_csv(folder_path, IDF)
