@@ -90,6 +90,6 @@ def get_Incidence_Matrix(folder_path, vocabulary_dict):
 
 fs.clear_dir(paths.incmat_dir)
 
-folder_path_list = [f"{paths.train_dir}/{year}" for year in years]
+folder_path_list = [f"{paths.base_dir}/{year}" for year in years]
 for folder_path in folder_path_list:
     save_Incidence_Matrix_to_csv(folder_path, Vocabulary)

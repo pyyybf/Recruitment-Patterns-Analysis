@@ -50,4 +50,4 @@ def get_vocabulary_sets(folder_path):
 fs.clear_dir(paths.vocabulary_sets_dir)
 
 for year in range(2016, 2023):
-    get_vocabulary_sets(f"{paths.train_dir}/{year}")
+    get_vocabulary_sets(f"{paths.base_dir}/{year}")

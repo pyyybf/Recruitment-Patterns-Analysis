@@ -43,7 +43,7 @@ def get_the_number_of_documents(folder_path):
 number_of_documents_by_year = {}
 for year in range(2016, 2023):
     year = str(year)
-    number_of_documents = get_the_number_of_documents(f'{paths.train_dir}/{year}')
+    number_of_documents = get_the_number_of_documents(f'{paths.base_dir}/{year}')
     number_of_documents_by_year[year] = number_of_documents
 
 number_of_documents_in_total = sum(number_of_documents_by_year.values())
@@ -140,7 +140,7 @@ def get_TFIDF(folder_path, IDF):
 
 fs.clear_dir(paths.tfidf_dir)
 
-folder_path_list = [f"{paths.train_dir}/{year}" for year in years]
+folder_path_list = [f"{paths.base_dir}/{year}" for year in years]
 for folder_path in folder_path_list:
     # get_TFIDF(folder_path, IDF)  # JSON too slow
     save_TFIDF_to_csv(folder_path, IDF)
