@@ -13,13 +13,6 @@ csv_files = ['2022_TFIDF.csv',
              '2020_TFIDF.csv',
              '2021_TFIDF.csv']
 
-matched_csv_files = ['matched_2022_TFIDF.csv',
-             'matched_2016_TFIDF.csv', 
-             'matched_2017_TFIDF.csv',
-             'matched_2018_TFIDF.csv',
-             'matched_2019_TFIDF.csv',
-             'matched_2020_TFIDF.csv',
-             'matched_2021_TFIDF.csv']
 
 
 def get_cik_from_csv(filename, column_name = 'CIK', chunk_size=1000):
