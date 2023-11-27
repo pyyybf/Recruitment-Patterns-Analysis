@@ -78,7 +78,25 @@ python split_train_test.py
 
 ### 4. LDA
 
+Discover 20 abstract topics in our documents collections with unsupervised learning. Each topic consists several words with a weight on each of it.
 
+Move into `LDA` directory.
+
+```shell
+cd ../LDA
+```
+
+Customize your file path configuration in the main function in `lda.py` and `utils/const/paths.py`. 
+
+Split and clean the lines in a single document. Then train the LDA model with this specific document.
+
+```shell
+python lda.py
+```
+
+Run `lda.ipynb` to train a LDA model with all documents in train set, and save the model for subsequent generation of scores on each topic for each document.
+
+![image-20231126201958772](https://raw.githubusercontent.com/pyyybf/imgsbed/main/image-20231126201958772.png)
 
 ### 5. Vocabulary, TFIDF and Incidence Matrix
 
@@ -138,7 +156,7 @@ train_output_dir = "./topic_data/train_topic"  # Directory for training topic sc
 test_output_dir = "./topic_data/test_topic"  # Directory for test topic scores + y
 ```
 
-Use the trained LDA model to calculate the scores of 20 topics for every Form 10-K (1.e. txt file), and merge the topic matrix with y. Save the results in `train/test_topics.csv`.
+Use the trained LDA model and incidence matrices of a document to construct the score on each of the 20 topics for a single document, and merge the topic matrix with y. Save the results in `train/test_topics.csv`.
 
 ```shell
 python calc_topic_score.py
@@ -223,7 +241,7 @@ python Classifier_TFIDF_test.py
 
 | Model Name | Parameters | Accuracy | Precision | Recall | F1 Score |
 | ---------- | ---------- | -------- | --------- | ------ | -------- |
-| SVC        | ``         | 0.6353   | 0.6353    | 1.0    | 0.7770   |
+| SVC        | TODO       | 0.6353   | 0.6353    | 1.0    | 0.7770   |
 
 #### 7.2 TFIDF Time-Series Classifier
 
@@ -270,7 +288,7 @@ python process_file_train_LR_classifier_time_series.py
 
 | Model Name         | Parameters | Accuracy | Precision | Recall | F1 Score |
 | ------------------ | ---------- | -------- | --------- | ------ | -------- |
-| LogisticRegression |            |          |           |        |          |
+| LogisticRegression | TODO       |          |           |        |          |
 
 #### 7.3 Topics Classifier
 
@@ -319,7 +337,7 @@ Show the ROC curve for all classifiers except `SVC` in `roc.ipynb` to get better
 
 #### 7.4 LSTM Topics Classifier
 
-
+TODO
 
 ## Code Contributors
 
