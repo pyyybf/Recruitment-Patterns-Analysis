@@ -2,7 +2,6 @@ import os
 import joblib
 
 from sklearn.model_selection import GridSearchCV, StratifiedKFold
-from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score, f1_score
 from sklearn.preprocessing import MinMaxScaler
 
 from sklearn.linear_model import LogisticRegression
@@ -13,8 +12,8 @@ from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.neural_network import MLPClassifier
 
-from utils.data_tool import prepare_data, get_topic_score, get_topic_score_by_year
-from utils.output_tool import output
+from utils.model_tool import prepare_data, evaluate_model
+from classifier_topics.utils.output_tool import output
 from utils import paths
 
 
@@ -80,28 +79,7 @@ def train_model(model_name, X_train, y_train):
     return grid_search.best_estimator_
 
 
-def evaluate_model(y_pred, y_test, output_path=None):
-    conf_mat = confusion_matrix(y_test, y_pred)
-    accuracy = accuracy_score(y_test, y_pred)
-    precision = precision_score(y_test, y_pred)
-    recall = recall_score(y_test, y_pred)
-    f_measure = f1_score(y_test, y_pred)
-
-    output("Confusion Matrix:\n", conf_mat, output_path=output_path)
-    output("Accuracy:", accuracy, output_path=output_path)
-    output("Precision:", precision, output_path=output_path)
-    output("Recall:", recall, output_path=output_path)
-    output("F1 Score:", f_measure, output_path=output_path)
-
-
 if __name__ == "__main__":
-    # Calculate scores for 20 topics by year
-    get_topic_score_by_year(paths.lda_model_path, paths.id2word_path, prefix="train")
-    get_topic_score_by_year(paths.lda_model_path, paths.id2word_path, prefix="test")
-    # Calculate scores for 20 topics by file
-    get_topic_score(paths.lda_model_path, paths.id2word_path, prefix="train")
-    get_topic_score(paths.lda_model_path, paths.id2word_path, prefix="test")
-
     # Create the directory for saving models
     if not os.path.exists(paths.save_model_dir):
         os.makedirs(paths.save_model_dir)
