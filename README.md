@@ -2,25 +2,49 @@
 
 This repository provides a comprehensive framework for training and evaluating an LSTM model on time-series data using PyTorch. It is structured to facilitate easy data loading, training, testing, and feature importance evaluation across different time periods.
 
+## Overview of LSTM Implementation
+
+The LSTM (Long Short-Term Memory) model incorporated in this framework is adept at capturing long-term dependencies within time-series data. With its unique architecture of gates including forget gate, input gate, and output gate, it can effectively retain and manage information over extended sequences. This ability makes LSTM particularly suitable for complex time-series prediction tasks where understanding both the recent and long-term historical context is crucial.
+
+### LSTM Mathematical Model
+
+At the core of the LSTM's ability to capture long-term dependencies are the following mathematical operations:
+
+- **Forget Gate** (\( f_t \)): Controls the extent to which a value remains in the cell state.
+  \[ f_t = \sigma(W_f \cdot [h_{t-1}, x_t] + b_f) \]
+- **Input Gate** (\( i_t \)) and **Candidate Memory** (\( \tilde{C}_t \)): Decide the new information to be added to the cell state.
+  \[ i_t = \sigma(W_i \cdot [h_{t-1}, x_t] + b_i) \]
+  \[ \tilde{C}_t = \tanh(W_C \cdot [h_{t-1}, x_t] + b_C) \]
+- **Cell State Update** (\( C_t \)): Updates the old cell state into the new cell state.
+  \[ C_t = f_t \ast C_{t-1} + i_t \ast \tilde{C}_t \]
+- **Output Gate** (\( o_t \)) and **Hidden State** (\( h_t \)): Control the output of the cell state to the rest of the network.
+  \[ o_t = \sigma(W_o \cdot [h_{t-1}, x_t] + b_o) \]
+  \[ h_t = o_t \ast \tanh(C_t) \]
+
+Where \( \sigma \) denotes the sigmoid function, \( \tanh \) is the hyperbolic tangent function, and \( \ast \) represents element-wise multiplication. These functions work together to regulate the information flow through the LSTM network over time.
+
 ## Structure
 
-- `dataloader`: Modules for loading data compatible with PyTorch models.
-- `utils`: Includes dataset processing scripts and utility functions to assist in data manipulation and preparation.
-- `evaluate`: Script for assessing the overall importance of input features to the model predictions.
-- `evaluate_bytime`: Scripts for evaluating the importance of input features on a yearly basis, allowing for temporal analysis of feature significance.
-- `model`: Contains the definition of the LSTM model architecture, detailing the layers and the flow of computation.
-- `train`: Training script that takes the processed data and applies the LSTM model to learn from the data.
-- `test`: Testing script that evaluates the performance of the trained model on a separate test dataset.
+- `dataloader`: Modules for loading and batching data in a format compatible with PyTorch models.
+- `utils`: Utility functions and scripts for preprocessing and preparing datasets for training and evaluation.
+- `evaluate`: A script to evaluate the overall importance of input features to the model's predictions.
+- `evaluate_bytime`: Tools for assessing the importance of features on a yearly basis, providing insights into the temporal dynamics of feature significance.
+- `model`: The LSTM model's architecture is defined here, including the configuration of its layers and computation flow.
+- `train`: Execute this script to train the LSTM model with your preprocessed data.
+- `test`: After training, this script is used to evaluate the LSTM model's performance on unseen test data.
 
 ## Usage
 
-To use this framework, you will need to ensure that your data is formatted correctly and placed within the appropriate directory. After preparing your data, you can train the model using the `train` script and subsequently test its performance with the `test` script.
+To utilize this framework for your time-series analysis:
 
-For feature importance evaluation, run the `evaluate` script to obtain an overall importance score for each feature. If you wish to perform a temporal importance analysis, use `evaluate_bytime` to assess feature importance for each year in your dataset.
+1. Format your dataset according to the guidelines provided and place it in the designated directory.
+2. Use the `train` script to initiate the training process with your prepared data.
+3. Evaluate your trained model using the `test` script on a separate testing set.
+4. For an analysis of feature importance, the `evaluate` script will rank features based on their influence on the model's output.
+5. To understand how feature importance varies over time, run the `evaluate_bytime` script with temporal data.
 
-## Requirements
+Ensure that you have the latest version of PyTorch installed, along with any other dependencies.
 
-This codebase is written in Python and requires PyTorch. The necessary packages can be installed via `pip`:
 
 # LDA Topic Extraction
 
