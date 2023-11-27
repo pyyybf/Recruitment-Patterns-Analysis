@@ -47,6 +47,35 @@ The following Python packages are required:
 - gensim
 - matplotlib (for visualization in the Jupyter Notebook)
 
+# Select Valuable
+
+The "Select Valuable" project focuses on extracting valuable information from datasets through preprocessing and classification models. This process aims to identify and harness the most impactful insights from your data.
+
+## Contents
+
+- `annotate sample`: This directory contains manually annotated data samples that serve as a benchmark for the model's performance and accuracy.
+
+- `extract_valuable`: A script dedicated to extracting valuable information from the dataset. It filters and processes the raw data to distill the most significant elements.
+
+- `pre_process_data`: This script performs various preprocessing operations on the data. Preprocessing is a crucial step that prepares raw data for further analysis and model training.
+
+- `run_clean_vectorize`: This script takes preprocessed data and converts it into a vectorized format suitable for machine learning models. Vectorization is essential for transforming text data into a numerical format that algorithms can interpret.
+
+- `train`: The training script where the classification model is trained with the preprocessed and vectorized data. This step involves learning from the data and adjusting the model's parameters accordingly.
+
+- `test`: The testing script used to evaluate the trained model's performance on unseen data. This step is crucial for assessing the generalizability and effectiveness of the model.
+
+- `utils`: A collection of utility functions that are used across the project. These functions provide common capabilities that facilitate data manipulation, feature extraction, and other necessary operations.
+
+## Getting Started
+
+To get started with the project, clone the repository and navigate to the project directory:
+
+```sh
+git clone https://github.com/your-username/select-valuable.git
+cd select-valuable
+
+
 You can install these packages using `pip`:
 
 ```sh
