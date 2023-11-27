@@ -15,13 +15,7 @@ from sklearn.neural_network import MLPClassifier
 
 from utils.data_tool import prepare_data, get_topic_score, get_topic_score_by_year
 from utils.output_tool import output
-
-lda_model_path = "./lda/trained_lda_model"
-id2word_path = "./lda/trained_lda_model.id2word"
-train_data_path = "./data/train_data/train_topics.csv"
-test_data_path = "./data/test_data/test_topics.csv"
-save_model_path = "./checkpoints"
-output_path = "./output.txt"
+from utils import paths
 
 
 def train_model(model_name, X_train, y_train):
@@ -102,22 +96,22 @@ def evaluate_model(y_pred, y_test, output_path=None):
 
 if __name__ == "__main__":
     # Calculate scores for 20 topics by year
-    get_topic_score_by_year(lda_model_path, id2word_path, prefix="train")
-    get_topic_score_by_year(lda_model_path, id2word_path, prefix="test")
+    get_topic_score_by_year(paths.lda_model_path, paths.id2word_path, prefix="train")
+    get_topic_score_by_year(paths.lda_model_path, paths.id2word_path, prefix="test")
     # Calculate scores for 20 topics by file
-    get_topic_score(lda_model_path, id2word_path, prefix="train")
-    get_topic_score(lda_model_path, id2word_path, prefix="test")
+    get_topic_score(paths.lda_model_path, paths.id2word_path, prefix="train")
+    get_topic_score(paths.lda_model_path, paths.id2word_path, prefix="test")
 
     # Create the directory for saving models
-    if not os.path.exists(save_model_path):
-        os.mkdir(save_model_path)
+    if not os.path.exists(paths.save_model_dir):
+        os.makedirs(paths.save_model_dir)
     # Clear output file
-    with open(output_path, "w"):
+    with open(paths.output_path, "w"):
         pass
 
     # Read train & test dataset
-    X_train, y_train = prepare_data(train_data_path, classifier=True)
-    X_test, y_test = prepare_data(test_data_path, classifier=True)
+    X_train, y_train = prepare_data(paths.train_data_path, classifier=True)
+    X_test, y_test = prepare_data(paths.test_data_path, classifier=True)
 
     # Normalize features
     scaler = MinMaxScaler()
@@ -135,12 +129,12 @@ if __name__ == "__main__":
         "NeuralNetworks",  # MLPClassifier
     ]
     for classifier_name in classifier_names:
-        output(f"\n========== {classifier_name} ==========", output_path=output_path)
+        output(f"\n========== {classifier_name} ==========", output_path=paths.output_path)
         # Train model
         model = train_model(classifier_name, X_train, y_train)
-        output(model, output_path=output_path)
+        output(model, output_path=paths.output_path)
         # Test model
         y_pred = model.predict(X_test)
-        evaluate_model(y_pred, y_test, output_path=output_path)
+        evaluate_model(y_pred, y_test, output_path=paths.output_path)
         # Save model
-        joblib.dump(model, f"{save_model_path}/{classifier_name}.joblib")
+        joblib.dump(model, f"{paths.save_model_dir}/{classifier_name}.joblib")
