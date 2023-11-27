@@ -1,62 +1,53 @@
 import requests
-from lxml import etree
-import re
+from bs4 import BeautifulSoup
 import pandas as pd
+import csv
 
-hearders = {'User-Agent': 'Mozilla/5.0'}  
 
 def get_unique_ciks(input_csv_file):
-    # Read the CSV file
-    df = pd.read_csv(csv_file)
-
-    # Extract unique CIKs from the 'cik' column
+    df = pd.read_csv(input_csv_file)
     unique_ciks = df['cik'].unique()
-
     return unique_ciks
 
+
 def get_sic_code(cik):
+    headers = {'User-Agent': 'Mozilla/5.0'}
+    url = f'https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK={cik}&type=&dateb=&owner=exclude&count=40'
     try:
-        url = f'https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK={cik}&type=&dateb=&owner=exclude&count=40'
         response = requests.get(url, headers=headers, timeout=20)
-        if response.status_code != 200:
-            print("Failed to retrieve data")
-            return None
+        response.raise_for_status()
+    except requests.exceptions.HTTPError as http_err:
+        print(f"HTTP error occurred: {http_err}")
+        return None
+    except Exception as err:
+        print(f"An error occurred: {err}")
+        return None
 
-        element = etree.HTML(response.content)
-        p = element.xpath("/html/body/div[4]/div[1]/div[3]/p")[0]
-        line_text = ""
-        for text in p.itertext():
-            if text.strip() == "State location:":
-                break
-            line_text += text.strip()
+    soup = BeautifulSoup(response.content, 'html.parser')
+    sic_code = None
+    try:
+        sic_code = soup.find('div', class_='companyInfo').find('a', href=lambda x: x and 'SIC' in x).text
+    except AttributeError:
+        print("SIC code not found")
 
-        info = re.split(r":|- ", line_text)
+    return sic_code
 
-        return info[1], info[2]
 
-    except Exception as e:
-        print(e)
-        print(f"Error: {url}")
-        return None, None
-
-input_csv_file = "" # path to the csv file with source cik
-ciks = get_get_unique_ciks
+input_csv_file = 'change_rate.csv'  # Path to the CSV file with source CIK
+ciks = list(get_unique_ciks(input_csv_file))
 output_csv_file = 'sic_codes.csv'
 
 sics = []
 
 for cik in ciks:
-    sic_code, name = get_sic_code(cik)
+    sic_code = get_sic_code(cik)
     if sic_code:
-        sics.append([cik, sic_code, name])
+        sics.append([cik, sic_code])
 
 # Write the data to a CSV file
-with open(csv_filename, 'w', newline='') as file:
+with open(output_csv_file, 'w', newline='') as file:
     writer = csv.writer(file)
-    # Write header
-    writer.writerow(['CIK', 'SIC Code', 'Name'])
-    # Write data rows
-    writer.writerows(csv_filename)
+    writer.writerow(['CIK', 'SIC Code'])
+    writer.writerows(sics)  # Write the list 'sics', not the filename
 
-print(f"Data has been written to '{csv_filename}'.")
-        
+print(f"Data has been written to '{output_csv_file}'.")
