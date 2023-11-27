@@ -374,12 +374,14 @@ The LSTM (Long Short-Term Memory) model incorporated in this framework is adept 
 At the core of the LSTM's ability to capture long-term dependencies are the following mathematical operations:
 
 - **Forget Gate** $f_t$: Controls the extent to which a value remains in the cell state. 
-  $$
+  
+- $$
   f_t = \sigma(W_f \cdot [h_{t-1}, x_t] + b_f)
   $$
 
 - **Input Gate** $i_t$ and **Candidate Memory** $\tilde{C}*t$: Decide the new information to be added to the cell state. 
-  $$
+  
+- $$
   i_t = \sigma(W_i \cdot [h*{t-1}, x_t] + b_i)
   $$
 
@@ -388,12 +390,14 @@ At the core of the LSTM's ability to capture long-term dependencies are the foll
   $$
 
 - **Cell State Update** $C_t$: Updates the old cell state into the new cell state. 
-  $$
+  
+- $$
   C_t = f_t \ast C_{t-1} + i_t \ast \tilde{C}_t
   $$
 
 - **Output Gate** $o_t$ and **Hidden State** $h_t$: Control the output of the cell state to the rest of the network. 
-  $$
+  
+- $$
   o_t = \sigma(W_o \cdot [h_{t-1}, x_t] + b_o)
   $$
   
