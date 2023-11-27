@@ -189,6 +189,7 @@ python baseline_LASSO_test.py
 #### 7.2 TFIDF Time-Series Classifier
 
 Set a hyper parameter $p$. Let $i$ be the number of subdivisions of $p$ based on the year, and use weighted average of the product of TFIDF for that year and $p^i$ as X for the classification model. Use the binary labels based on change rate as y.
+
 $$
 X=\sum_{i=0}^{6}(p^i\times TFIDF_i)\div\sum_{i=0}^{6}p^i
 $$
