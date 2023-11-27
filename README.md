@@ -156,7 +156,7 @@ python calc_topic_score_by_year.py
 
 ##### 7.1.1 TFIDF Regression
 
-Use TFIDF as X for this model, and use LASSO to predict the number value of change rate.
+This regression model use TFIDF as X, and use LASSO to predict the number value of change rate.
 
 Move into `baseline` directory.
 
@@ -184,7 +184,46 @@ python baseline_LASSO_test.py
 
 ##### 7.1.2 TFIDF Classifier
 
+This classification model use TFIDF as X, and use binary labels based on change rate as y.
 
+Move into `Classifier_TFIDF` directory.
+
+```shell
+cd ../Classifier_TFIDF
+```
+
+Customize your file path configuration at the top of each python script before running.
+
+```python
+models = [
+  'LogisticRegression',
+  'KNeighborsClassifier',
+  'SVC',
+  'DecisionTreeclassifier',
+  'RandomForestclassifier',
+  'GradientBoostingClassifier',
+  'NaiveBayes',
+  'NeuralNetwork'
+]
+```
+
+Get the best parameters with grid search. Train and save the classification models.
+
+```shell
+python Classifier_TFIDF_train.py
+```
+
+Use test set to evaluate these classifiers.
+
+```
+python Classifier_TFIDF_test.py
+```
+
+##### Statistics of Best Model
+
+| Model Name | Parameters | Accuracy | Precision | Recall | F1 Score |
+| ---------- | ---------- | -------- | --------- | ------ | -------- |
+| SVC        | ``         | 0.6353   | 0.6353    | 1.0    | 0.7770   |
 
 #### 7.2 TFIDF Time-Series Classifier
 
@@ -250,8 +289,6 @@ save_model_dir = "./checkpoints"  # Save directory for trained models
 output_path = "./output.txt"  # Output file
 ```
 
-Train the classification models, get best parameneters with grid search, and then use test set to evaluate the classifier.
-
 ```python
 # Model list
 classifier_names = [
@@ -265,6 +302,8 @@ classifier_names = [
     "NeuralNetworks",  # MLPClassifier
 ]
 ```
+
+Train the classification models, get best parameneters with grid search, and then use test set to evaluate the classifier.
 
 ```shell
 python train_model.py
