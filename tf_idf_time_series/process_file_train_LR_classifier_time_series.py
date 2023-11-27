@@ -80,7 +80,7 @@ for parameter in parameter_list:
     if cv_scores.mean() > best_mean_cv_score:
         best_mean_cv_score = cv_scores.mean()
         best_parameter = parameter
-        joblib.dump(model, 'model/LR.joblib')
+        joblib.dump(model, 'model_LR_time_series.joblib')
 
 print("Best CV accuracy is", best_mean_cv_score)
 print("Best hyper parameter is", best_parameter)
