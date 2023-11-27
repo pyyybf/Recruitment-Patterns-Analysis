@@ -22,6 +22,4 @@ For feature importance evaluation, run the `evaluate` script to obtain an overal
 
 This codebase is written in Python and requires PyTorch. The necessary packages can be installed via `pip`:
 
-```sh
-pip install -r requirements.txt
 
