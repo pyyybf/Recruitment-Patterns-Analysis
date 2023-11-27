@@ -22,4 +22,33 @@ For feature importance evaluation, run the `evaluate` script to obtain an overal
 
 This codebase is written in Python and requires PyTorch. The necessary packages can be installed via `pip`:
 
+# LDA Topic Extraction
+
+This repository is dedicated to performing Latent Dirichlet Allocation (LDA) for topic extraction from text data. It includes both a script and a Jupyter Notebook for flexibility in how the LDA model is used and explored.
+
+## Contents
+
+- `lda.py`: A Python script that runs the LDA topic model algorithm on the provided dataset.
+- `lda.ipynb`: A Jupyter Notebook version of the LDA topic model, which allows for interactive analysis and visualization of the topics extracted from the text data.
+- `utils`: A collection of utility functions that support data preprocessing, model parameter tuning, and other tasks related to topic modeling.
+- `test.txt`: A sample text file used for testing the LDA model implementation and demonstrating its capabilities.
+
+## Getting Started
+
+To begin using the LDA topic extraction tools in this repository, clone the repository to your local machine and ensure you have the necessary dependencies installed.
+
+### Prerequisites
+
+The following Python packages are required:
+
+- numpy
+- pandas
+- scikit-learn
+- gensim
+- matplotlib (for visualization in the Jupyter Notebook)
+
+You can install these packages using `pip`:
+
+```sh
+pip install numpy pandas scikit-learn gensim matplotlib
 
