@@ -169,3 +169,10 @@ dmypy.json
 cython_debug/
 
 .idea
+
+# Data files
+data_html/
+data_original/
+data_processed/
+data_txt/
+html_url/
