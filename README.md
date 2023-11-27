@@ -79,5 +79,5 @@ cd select-valuable
 You can install these packages using `pip`:
 
 ```sh
-pip install numpy pandas scikit-learn gensim matplotlib
+pip install numpy pandas scikit-learn nltk matplotlib
 
