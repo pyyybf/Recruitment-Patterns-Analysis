@@ -113,7 +113,7 @@ Generate TFIDF matrics in the `TFIDF` directory.
 python TFIDF.py
 ```
 
-Merge the y values with the TFIDF matrices and save the result in the `y_X` directory. Set y to a change rate value or a binary label by setting the parameter `classification` of function `merge_X_y`.
+Merge the y values with the TFIDF matrices and save the result in the `y_X` directory. Set y to a change rate value or a binary label (change rate larger than 0 => 1, no larger than 0 => 0) by setting the parameter `classification` of function `merge_X_y`.
 
 ```shell
 python merge_y.py
@@ -156,7 +156,31 @@ python calc_topic_score_by_year.py
 
 ##### 7.1.1 TFIDF Regression
 
+Use TFIDF as X for this model, and use LASSO to predict the number value of change rate.
 
+Move into `baseline` directory.
+
+```shell
+cd ../baseline
+```
+
+Customize your file path in `baseline_LASSO_train.py`. Then train Logistic Regression with TFIDF matrix and the number value of change rate.
+
+```python
+folder_path = 'path/to/your/csv/files'
+y_train_file = 'train_y.csv'
+model_file = 'multi_target_lasso_regression_model.joblib'
+```
+
+```shell
+python baseline_LASSO_train.py
+```
+
+Test the model.
+
+```shell
+python baseline_LASSO_test.py
+```
 
 ##### 7.1.2 TFIDF Classifier
 
@@ -164,7 +188,56 @@ python calc_topic_score_by_year.py
 
 #### 7.2 TFIDF Time-Series Classifier
 
+Set a hyper parameter $p$. Let $i$ be the number of subdivisions of $p$ based on the year, and use weighted average of the product of TFIDF for that year and $p^i$ as X for the classification model. Use the binary labels based on change rate as y.
+$$
+X=\sum_{i=0}^{6}(p^i\times TFIDF_i)\div\sum_{i=0}^{6}p^i
+$$
 
+$$
+y=
+\begin{align*}
+  \begin{split}
+     \left \{
+      \begin{array}{ll}
+        1, & change\_rate > 0\\
+        0 & otherwise
+      \end{array}
+    \right.
+  \end{split}
+\end{align*}
+$$
+
+Move into `tf_idf_time_series` directory.
+
+```shell
+cd ../tf_idf_time_series
+```
+
+Customize your file path configuration at the top of each python script before running.
+
+Save list of cik (i.e. company) with change rate available every year in `intersection_of_cik_in_training_set.txt`.
+
+```shell
+python get_cik.py
+```
+
+Filter the rows in TFIDF csv file by the above cik list, and generate the final dataset for model.
+
+```shell
+python matching_cik.py
+```
+
+Train Logistic Regression with the new X matrix and binary labels based on change rate.
+
+```shell
+python process_file_train_LR_classifier_time_series.py
+```
+
+##### Statistics of Trained Model
+
+| Model Name         | Parameters | Accuracy | Precision | Recall | F1 Score |
+| ------------------ | ---------- | -------- | --------- | ------ | -------- |
+| LogisticRegression |            |          |           |        |          |
 
 #### 7.3 Topics Classifier
 
