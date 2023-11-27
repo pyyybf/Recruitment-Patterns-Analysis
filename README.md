@@ -195,17 +195,10 @@ X=\sum_{i=0}^{6}(p^i\times TFIDF_i)\div\sum_{i=0}^{6}p^i
 $$
 
 $$
-y=
-\begin{align*}
-  \begin{split}
-     \left \{
-      \begin{array}{ll}
-        1, & change\_rate > 0\\
-        0 & otherwise
-      \end{array}
-    \right.
-  \end{split}
-\end{align*}
+y=\begin{cases}  
+1, & change\underline{}rate > 0 \\
+0 & otherwise
+\end{cases}
 $$
 
 Move into `tf_idf_time_series` directory.
